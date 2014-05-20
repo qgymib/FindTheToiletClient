@@ -16,7 +16,7 @@
     <string name="fragment_account_hint_passwd">Create a password</string>
     <string name="fragment_account_hint_repeat_passwd">Repeat your password</string>
     <string name="fragment_account_signup_warnning_message">Please do not use special characters, accents, apostrophies, etc&#8230; when creating your profile</string>
-    <string name="fragment_account_change_view_to_login">Don't have an acount?\nSign Up</string>
+    <string name="fragment_account_change_view_to_login">Don\'t have an acount?\nSign Up</string>
     <string name="fragment_account_change_view_to_signup">Already have an account?\nSign In</string>
     <string name="fragment_account_signup_email_invalid">Email Invalid</string>
     <string name="fragment_account_signup_passwd_repeat_invalid">Password Repeat Invalid</string>
