@@ -39,8 +39,8 @@
         android:id="@+id/textView_changeViewToSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_account_signup"
-        android:textSize="28sp"
+        android:text="@string/fragment_account_change_view_to_signup"
+        android:textSize="18sp"
         android:gravity="center_horizontal" />
 
 </LinearLayout>
