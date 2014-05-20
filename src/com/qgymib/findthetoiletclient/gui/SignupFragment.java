@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -303,35 +304,62 @@ public class SignupFragment extends Fragment {
                                         .getApplicationContext(),
                                 getString(R.string.success_signup),
                                 Toast.LENGTH_SHORT).show();
-                        // 跳转至InfoFragment
-                        AccountFragment accountFragment = (AccountFragment) getParentFragment();
-                        DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
-                        dt.transAction(R.layout.fragment_account_info);
+
                     } else {
                         String warnningInfo;
-                        
+
                         // 注册不成功，提示相应信息
                         switch (result) {
 
                         // 用户名已存在
-                        case ConfigureInfo.Account.Errno.username_exist:
+                        case ConfigureInfo.Account.Errno.username_taken:
+                            warnningInfo = getString(R.string.error_username_taken);
                             break;
 
                         // 网络连接异常
                         case ConfigureInfo.Account.Errno.connection_error:
+                            warnningInfo = getString(R.string.error_connection);
                             break;
-                            
+
                         case ConfigureInfo.Account.Errno.unknow:
                         default:
+                            warnningInfo = getString(R.string.error_unknow);
                             break;
                         }
+
+                        Toast.makeText(
+                                getParentFragment().getActivity()
+                                        .getApplicationContext(), warnningInfo,
+                                Toast.LENGTH_LONG).show();
                     }
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
+                    Log.e(ConfigureInfo.Common.tag,
+                            "signup asynctask was interrupted");
+                    result = -1;
+                    Toast.makeText(
+                            getParentFragment().getActivity()
+                                    .getApplicationContext(),
+                            "signup asynctask was interrupted",
+                            Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 } catch (ExecutionException e) {
-                    // TODO Auto-generated catch block
+                    Log.e(ConfigureInfo.Common.tag,
+                            "signup asynctask executed failed");
+                    result = -1;
+                    Toast.makeText(
+                            getParentFragment().getActivity()
+                                    .getApplicationContext(),
+                            "signup asynctask executed failed",
+                            Toast.LENGTH_LONG).show();
                     e.printStackTrace();
+                }
+
+                // 若注册成功，则跳转到InfoFragment
+                if (result >= 0) {
+                    // 跳转至InfoFragment
+                    AccountFragment accountFragment = (AccountFragment) getParentFragment();
+                    DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
+                    dt.transAction(R.layout.fragment_account_info);
                 }
             }
         });

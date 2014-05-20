@@ -116,7 +116,7 @@ public final class ConfigureInfo {
             /**
              * 用户名已存在
              */
-            public static final int username_exist = -5;
+            public static final int username_taken = -5;
         }
     }
 

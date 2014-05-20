@@ -26,6 +26,7 @@
     <string name="success_signup">Signup Success</string>
     <string name="error_connection">Connection Error. Please check your Net Connection.</string>
     <string name="error_username_invalid">This username does not exist.</string>
+    <string name="error_username_taken">Username is already taken</string>
     <string name="error_passwd_invalid">The password is incorrect.</string>
     <string name="error_unknow">Unknow Error</string>
     <string name="local_vaild_for_login_failed">Username or Password incorrect. Please double check.</string>

@@ -411,8 +411,12 @@ public class NetworkTaskManager {
         /**
          * 对注册结果的事件处理
          */
-        private void actionForSignup() {
-            // TODO 注册结果业务逻辑
+        private int actionForSignup() {
+            // 事件处理完成，客户端请求关闭连接
+            sendMessage(ConfigureInfo.MessageType.FIN);
+
+            // 返回处理结果
+            return Integer.parseInt(getMessageList()[0]);
         }
 
     }
