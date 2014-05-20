@@ -110,7 +110,7 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(
                                 getParentFragment().getActivity()
                                         .getApplicationContext(),
-                                getString(R.string.login_success),
+                                getString(R.string.success_login),
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         // 返回值小于0则登录错误。提示相应信息
@@ -118,24 +118,24 @@ public class LoginFragment extends Fragment {
                         switch (result) {
                         // 网络连接异常
                         case ConfigureInfo.Account.Errno.connection_error:
-                            warnningInfo = getString(R.string.connect_error);
+                            warnningInfo = getString(R.string.error_connection);
                             break;
 
                         // 用户名不存在
                         case ConfigureInfo.Account.Errno.username_invalid:
-                            warnningInfo = getString(R.string.username_invalid);
+                            warnningInfo = getString(R.string.error_username_invalid);
                             break;
 
                         // 密码错误
                         case ConfigureInfo.Account.Errno.passwd_invalid:
-                            warnningInfo = getString(R.string.passwd_invalid);
+                            warnningInfo = getString(R.string.error_passwd_invalid);
                             break;
 
                         // 未知错误
                         case ConfigureInfo.Account.Errno.unknow:
                         // 任何不在列表中的错误均为未知错误
                         default:
-                            warnningInfo = getString(R.string.unknow_error);
+                            warnningInfo = getString(R.string.error_unknow);
                             break;
                         }
                         Toast.makeText(

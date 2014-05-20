@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -302,13 +301,15 @@ public class SignupFragment extends Fragment {
                         Toast.makeText(
                                 getParentFragment().getActivity()
                                         .getApplicationContext(),
-                                getString(R.string.signup_success),
+                                getString(R.string.success_signup),
                                 Toast.LENGTH_SHORT).show();
                         // 跳转至InfoFragment
                         AccountFragment accountFragment = (AccountFragment) getParentFragment();
                         DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
                         dt.transAction(R.layout.fragment_account_info);
                     } else {
+                        String warnningInfo;
+                        
                         // 注册不成功，提示相应信息
                         switch (result) {
 
