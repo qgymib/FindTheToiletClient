@@ -103,7 +103,7 @@ public class NetworkService {
      *            用户名
      * @param passwd_md5
      *            经md5加密的密码
-     * @return 任何大于等于0的数值代表注册成功，小于0的数值为具体错误代码
+     * @return 任何大于等于0的数值代表用户权限，小于0的数值为具体错误代码
      */
     public int requestSignup(String username, String passwd_md5) {
         int result = ConfigureInfo.Account.Errno.connection_error;
