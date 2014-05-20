@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FindTheToilet</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_map">Map</string>
+    <string name="section_settings">Settings</string>
+    <string name="section_account">Account</string>
+    <string name="fragment_account_login">Login</string>
+    <string name="fragment_account_signup">SignUp</string>
+    <string name="fragment_account_hint_username">Please enter your username</string>
+    <string name="fragment_account_hint_passwd">Please enter your password</string>
+    <string name="fragment_account_hint_repeat_passwd">Please repeat your password</string>
+    <string name="fragment_account_hint_email">Please enter your email address</string>
+    <string name="fragment_account_change_view_to_login">Have an acount? Login now!</string>
+    <string name="fragment_account_change_view_to_signup">Already have an account?\nLogin now!</string>
+    <string name="fragment_account_signup_email_invalid">Email Invalid</string>
+    <string name="fragment_account_signup_passwd_repeat_invalid">Password Repeat Invalid</string>
+    <string name="fragment_account_signup_username_invalid">username should only include letter, number or underlines</string>
+    <string name="fragment_account_signup_passwd_invalid">Password should only include letter, number or underlines</string>
+    <string name="login_success">Login Success</string>
+    <string name="signup_success">Signup Success</string>
+    <string name="connect_error">Connection Error. Please check your Net Connection.</string>
+    <string name="username_invalid">This username does not exist.</string>
+    <string name="passwd_invalid">The password is incorrect.</string>
+    <string name="unknow_error">Unknow Error</string>
+    <string name="local_vaild_for_login_failed">Username or Password incorrect. Please double check.</string>
+
+</resources>
