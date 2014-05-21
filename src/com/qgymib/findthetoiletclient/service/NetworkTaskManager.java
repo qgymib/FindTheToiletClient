@@ -163,6 +163,7 @@ public class NetworkTaskManager {
      * @throws IOException
      */
     private void getVaildMessage() throws IOException {
+        boolean isGetVaildMessage = false;
         // 数据包最多请求重发次数
         for (int i = ConfigureInfo.Net.connect_reset_count; i > 0; i--) {
             // 接收数据包
@@ -170,16 +171,21 @@ public class NetworkTaskManager {
 
             if (checkMessage()) {
                 // 信息校验成功，进行下一步处理
-                return;
+                Log.d(ConfigureInfo.Common.tag, "信息校验成功");
+                isGetVaildMessage = true;
+                break;
             } else {
                 // 信息校验失败，请求重新发送数据包
+                Log.d(ConfigureInfo.Common.tag, "信息校验失败");
                 sendMessage(ConfigureInfo.MessageType.LOST);
             }
         }
 
-        // 若执行到此处，则为在重发周期内读取不到有效信息
-        throw new IOException(
-                "connect shuold be interrupt because of net environment");
+        if (!isGetVaildMessage) {
+            // 若执行到此处，则为在重发周期内读取不到有效信息
+            throw new IOException(
+                    "connect shuold be interrupt because of net environment");
+        }
     }
 
     /**
@@ -193,8 +199,11 @@ public class NetworkTaskManager {
         Pattern pattern = Pattern.compile(ConfigureInfo.Regex.parcel);
         Matcher matcher = pattern.matcher(lastReceivedMessage);
 
+        Log.d(ConfigureInfo.Common.tag, "验证消息: " + lastReceivedMessage);
+        
         // 校验信息基本格式
         if (!matcher.find()) {
+            Log.d(ConfigureInfo.Common.tag, "正则表达式验证不通过");
             isValid = false;
         } else {
 
@@ -203,13 +212,16 @@ public class NetworkTaskManager {
             // 由于当无法找到CRC校验符时返回的是-1，因此此处一并将这种情况处理了
             int crcPosition = lastReceivedMessage.indexOf("_CRC32:");
             if (crcPosition >= 4) {
+                Log.d(ConfigureInfo.Common.tag, "CRC位置验证通过");
                 String crcValue = lastReceivedMessage
                         .substring(crcPosition + 7);
 
                 String rawData = lastReceivedMessage.substring(0, crcPosition);
                 if (crcValue.equals(Tools.getCRC32(rawData))) {
+                    Log.d(ConfigureInfo.Common.tag, "CRC验证通过");
                     isValid = true;
                 } else {
+                    Log.d(ConfigureInfo.Common.tag, "CRC验证未通过");
                     isValid = false;
                 }
             }

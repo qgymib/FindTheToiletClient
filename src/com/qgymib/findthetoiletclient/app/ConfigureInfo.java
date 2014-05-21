@@ -205,7 +205,7 @@ public final class ConfigureInfo {
         /**
          * 校验报文。
          */
-        public static final String parcel = "^0x0[0-6][\\d\\w\\_]*_CRC32:\\d{10}$";
+        public static final String parcel = "^0x0[0-7][\\d\\w_\\-]*_CRC32:[a-fA-F\\d]{1,}$";
         /**
          * 校验用户名。用户名由字母、数字、下划线组成，长度至少为6个字符。
          */

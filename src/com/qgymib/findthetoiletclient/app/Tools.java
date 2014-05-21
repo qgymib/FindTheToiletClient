@@ -65,7 +65,7 @@ public class Tools {
         CRC32 crc32 = new CRC32();
 
         crc32.update(src.getBytes());
-        hexResult = String.valueOf(crc32.getValue());
+        hexResult = Long.toHexString(crc32.getValue());
 
         return hexResult;
     }
