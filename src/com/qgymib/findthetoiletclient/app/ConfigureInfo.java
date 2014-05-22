@@ -131,7 +131,6 @@ public final class ConfigureInfo {
          * 服务器地址
          */
         public static final String server_address = "10.0.2.2";
-        // public static final String server_address = "127.0.0.1";
         /**
          * 服务器端口
          */
