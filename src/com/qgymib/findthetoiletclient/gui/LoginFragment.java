@@ -43,9 +43,9 @@ public class LoginFragment extends Fragment {
     private String username;
     private String passwd_md5;
 
-    public LoginFragment(){
+    public LoginFragment() {
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -107,8 +107,6 @@ public class LoginFragment extends Fragment {
                     result = loginTask.get();
 
                     if (result >= 0) {
-                        // 若返回值大于等于0，则登录成功。其返回值为用户权限
-                        ConfigureInfo.Account.permission = result;
                         // 提示登陆成功
                         Toast.makeText(
                                 getParentFragment().getActivity()
@@ -136,7 +134,7 @@ public class LoginFragment extends Fragment {
 
                         // 未知错误
                         case ConfigureInfo.Account.Errno.unknow:
-                        // 任何不在列表中的错误均为未知错误
+                            // 任何不在列表中的错误均为未知错误
                         default:
                             warnningInfo = getString(R.string.error_unknow);
                             break;
@@ -172,6 +170,9 @@ public class LoginFragment extends Fragment {
 
                 // 若登录成功，则跳转到InfoFragment
                 if (result >= 0) {
+                    // 设置用户权限
+                    ConfigureInfo.Account.permission = result;
+                    // 通知父fragment跳转
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
                     dt.transAction(R.layout.fragment_account_info);
