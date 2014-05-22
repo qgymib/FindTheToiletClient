@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_username"
+            android:hint="@string/fragment_account_signup_hint_username"
             android:inputType="textPersonName" >
 
             <requestFocus />
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_email"
+            android:hint="@string/fragment_account_signup_hint_email"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_passwd"
+            android:hint="@string/fragment_account_signup_hint_passwd"
             android:inputType="textPassword" />
 
         <EditText
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_repeat_passwd"
+            android:hint="@string/fragment_account_signup_hint_repeat_passwd"
             android:inputType="textPassword" />
 
         <Button

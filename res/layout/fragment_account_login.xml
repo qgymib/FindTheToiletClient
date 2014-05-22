@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_username" >
+            android:hint="@string/fragment_account_login_hint_username" >
 
             <requestFocus />
         </EditText>
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/fragment_account_hint_passwd"
+            android:hint="@string/fragment_account_login_hint_passwd"
             android:inputType="textPassword" />
 
         <Button

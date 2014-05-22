@@ -60,9 +60,9 @@ public class SignupFragment extends Fragment {
     private boolean isFirstCheckPasswd = true;
     private boolean isFirstCheckRepeatPasswd = true;
 
-    public SignupFragment(){
+    public SignupFragment() {
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -338,7 +338,7 @@ public class SignupFragment extends Fragment {
                 } catch (InterruptedException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "signup asynctask was interrupted");
-                    result = -1;
+                    result = ConfigureInfo.Account.Errno.unknow;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -348,7 +348,7 @@ public class SignupFragment extends Fragment {
                 } catch (ExecutionException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "signup asynctask executed failed");
-                    result = -1;
+                    result = ConfigureInfo.Account.Errno.unknow;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -359,6 +359,8 @@ public class SignupFragment extends Fragment {
 
                 // 若注册成功，则跳转到InfoFragment
                 if (result >= 0) {
+                    // 注册用户权限
+                    ConfigureInfo.Account.permission = result;
                     // 跳转至InfoFragment
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
