@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import android.util.Log;
 
-import com.qgymib.findthetoiletclient.R.string;
 import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 import com.qgymib.findthetoiletclient.app.Tools;
 
@@ -106,7 +105,7 @@ public class NetworkTaskManager {
      * 
      * @param messageList
      *            MessageType + message1 + message2 ...
-     * @see ConfigureInfo.message_type
+     * @see ConfigureInfo.MessageType
      */
     private void sendMessage(int type, String... messageList) {
         // 封装任务类型
@@ -200,7 +199,7 @@ public class NetworkTaskManager {
         Matcher matcher = pattern.matcher(lastReceivedMessage);
 
         Log.d(ConfigureInfo.Common.tag, "验证消息: " + lastReceivedMessage);
-        
+
         // 校验信息基本格式
         if (!matcher.find()) {
             Log.d(ConfigureInfo.Common.tag, "正则表达式验证不通过");
@@ -254,8 +253,8 @@ public class NetworkTaskManager {
      * 登录任务。返回用户权限或者错误代码
      * 
      * @author qgymib
-     * @see ConfigureInfo.account.account_permission
-     * @see ConfigureInfo.account.errno
+     * @see ConfigureInfo.Account.Permission
+     * @see ConfigureInfo.Account.Errno
      */
     public class LoginTask implements Callable<Integer> {
 
@@ -348,6 +347,8 @@ public class NetworkTaskManager {
      * 注册任务。返回注册结果或错误编码
      * 
      * @author qgymib
+     * @see ConfigureInfo.Account.Permission
+     * @see ConfigureInfo.Account.Errno
      *
      */
     public class SignupTask implements Callable<Integer> {
