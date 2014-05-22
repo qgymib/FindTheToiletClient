@@ -27,11 +27,7 @@ public class BaiduMapFragment extends Fragment {
     private MapController mapController = null;
     private MKMapViewListener mMapListener = null;
 
-    /**
-     * 所有继承Fragment的子类均应该有一个空的构造函数
-     */
     public BaiduMapFragment() {
-
     }
 
     @Override

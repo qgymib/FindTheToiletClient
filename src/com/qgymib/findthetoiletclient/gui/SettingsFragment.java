@@ -21,7 +21,6 @@ public class SettingsFragment extends Fragment {
     private View rootView = null;
 
     public SettingsFragment() {
-
     }
 
     @Override

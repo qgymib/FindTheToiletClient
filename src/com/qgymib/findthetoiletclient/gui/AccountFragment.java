@@ -21,6 +21,9 @@ public class AccountFragment extends Fragment implements
         DataTransfer.ViewTransferForAccount {
     public static final String fragmentTag = "account";
 
+    public AccountFragment(){
+    }
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

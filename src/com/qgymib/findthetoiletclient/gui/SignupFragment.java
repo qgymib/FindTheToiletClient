@@ -60,6 +60,9 @@ public class SignupFragment extends Fragment {
     private boolean isFirstCheckPasswd = true;
     private boolean isFirstCheckRepeatPasswd = true;
 
+    public SignupFragment(){
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

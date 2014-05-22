@@ -43,6 +43,9 @@ public class LoginFragment extends Fragment {
     private String username;
     private String passwd_md5;
 
+    public LoginFragment(){
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

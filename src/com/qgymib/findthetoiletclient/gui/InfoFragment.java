@@ -10,4 +10,7 @@ import android.support.v4.app.Fragment;
  */
 public class InfoFragment extends Fragment {
     public static final String fragmentTag = "info";
+    
+    public InfoFragment(){
+    }
 }
