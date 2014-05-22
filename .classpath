@@ -3,13 +3,9 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="lib" path="libs/baidumapapi_v2_4_1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/E:/Android/BaiduSDK/BaiduMap_AndroidSDK_v2.4.1_All/BaiduMap_AndroidSDK_v2.4.1_Docs/doc/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="libs/locSDK_4.1.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="libs/baidumapapi_v2_4_2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
