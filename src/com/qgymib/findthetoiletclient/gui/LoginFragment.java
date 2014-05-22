@@ -148,7 +148,7 @@ public class LoginFragment extends Fragment {
                 } catch (InterruptedException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "login asynctask was interrupted");
-                    result = -1;
+                    result = ConfigureInfo.Account.Errno.unknow;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -157,7 +157,7 @@ public class LoginFragment extends Fragment {
                 } catch (ExecutionException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "login asynctask executed failed");
-                    result = -1;
+                    result = ConfigureInfo.Account.Errno.unknow;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
