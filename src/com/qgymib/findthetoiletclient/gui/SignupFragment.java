@@ -324,7 +324,7 @@ public class SignupFragment extends Fragment {
                             warnningInfo = getString(R.string.error_connection);
                             break;
 
-                        case ConfigureInfo.Account.Errno.unknow:
+                        case ConfigureInfo.Account.Errno.unknown:
                         default:
                             warnningInfo = getString(R.string.error_unknow);
                             break;
@@ -338,7 +338,7 @@ public class SignupFragment extends Fragment {
                 } catch (InterruptedException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "signup asynctask was interrupted");
-                    result = ConfigureInfo.Account.Errno.unknow;
+                    result = ConfigureInfo.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -348,7 +348,7 @@ public class SignupFragment extends Fragment {
                 } catch (ExecutionException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "signup asynctask executed failed");
-                    result = ConfigureInfo.Account.Errno.unknow;
+                    result = ConfigureInfo.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),

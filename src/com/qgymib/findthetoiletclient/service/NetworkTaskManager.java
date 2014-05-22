@@ -276,7 +276,7 @@ public class NetworkTaskManager {
 
         @Override
         public Integer call() {
-            int result = ConfigureInfo.Account.Errno.unknow;
+            int result = ConfigureInfo.Account.Errno.unknown;
             // 此处需要捕获所有异常。当异常发生时，需要终止任务并通知用户
             try {
                 // 初始化所需资源
@@ -371,7 +371,7 @@ public class NetworkTaskManager {
 
         @Override
         public Integer call() throws Exception {
-            int result = ConfigureInfo.Account.Errno.unknow;
+            int result = ConfigureInfo.Account.Errno.unknown;
 
             try {
                 // 初始化任务所需资源

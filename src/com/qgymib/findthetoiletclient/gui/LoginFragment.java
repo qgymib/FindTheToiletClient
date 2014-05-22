@@ -133,7 +133,7 @@ public class LoginFragment extends Fragment {
                             break;
 
                         // 未知错误
-                        case ConfigureInfo.Account.Errno.unknow:
+                        case ConfigureInfo.Account.Errno.unknown:
                             // 任何不在列表中的错误均为未知错误
                         default:
                             warnningInfo = getString(R.string.error_unknow);
@@ -148,7 +148,7 @@ public class LoginFragment extends Fragment {
                 } catch (InterruptedException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "login asynctask was interrupted");
-                    result = ConfigureInfo.Account.Errno.unknow;
+                    result = ConfigureInfo.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -157,7 +157,7 @@ public class LoginFragment extends Fragment {
                 } catch (ExecutionException e) {
                     Log.e(ConfigureInfo.Common.tag,
                             "login asynctask executed failed");
-                    result = ConfigureInfo.Account.Errno.unknow;
+                    result = ConfigureInfo.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),

@@ -76,12 +76,12 @@ public class NetworkService {
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // 任务中断
-            identity = ConfigureInfo.Account.Errno.unknow;
+            identity = ConfigureInfo.Account.Errno.unknown;
             Log.e(ConfigureInfo.Common.tag,
                     "login task was interrupted while waiting ");
         } catch (ExecutionException e) {
             // 任务抛出异常
-            identity = ConfigureInfo.Account.Errno.unknow;
+            identity = ConfigureInfo.Account.Errno.unknown;
             Log.w(ConfigureInfo.Common.tag, "login task executed failed");
             e.getCause().printStackTrace();
         } catch (TimeoutException e) {
@@ -118,12 +118,12 @@ public class NetworkService {
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // 任务中断
-            result = ConfigureInfo.Account.Errno.unknow;
+            result = ConfigureInfo.Account.Errno.unknown;
             Log.e(ConfigureInfo.Common.tag,
                     "singup task was interrupted while waiting ");
         } catch (ExecutionException e) {
             // 任务抛出异常
-            result = ConfigureInfo.Account.Errno.unknow;
+            result = ConfigureInfo.Account.Errno.unknown;
             Log.w(ConfigureInfo.Common.tag, "signup task executed failed");
             e.getCause().printStackTrace();
         } catch (TimeoutException e) {

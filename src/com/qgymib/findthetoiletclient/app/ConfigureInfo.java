@@ -112,7 +112,7 @@ public final class ConfigureInfo {
             /**
              * 由于未知原因导致的验证失败
              */
-            public static final int unknow = -4;
+            public static final int unknown = -4;
             /**
              * 用户名已存在
              */
