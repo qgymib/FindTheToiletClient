@@ -1,4 +1,9 @@
-package com.qgymib.findthetoiletclient.gui;
+package com.qgymib.findthetoiletclient.app;
+
+import com.qgymib.findthetoiletclient.gui.AccountFragment;
+import com.qgymib.findthetoiletclient.gui.InfoFragment;
+import com.qgymib.findthetoiletclient.gui.LoginFragment;
+import com.qgymib.findthetoiletclient.gui.SignupFragment;
 
 /**
  * 用于各个组件之间的信息交互。
