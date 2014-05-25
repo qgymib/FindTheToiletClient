@@ -120,6 +120,55 @@ public final class ConfigureInfo {
         }
     }
 
+    public static final class Location {
+        public static final class Key {
+            /**
+             * 定位结果有效性
+             */
+            public static final String isValid = "isValid";
+            /**
+             * 纬度
+             */
+            public static final String latitude = "latitude";
+            /**
+             * 经度
+             */
+            public static final String longitude = "longitude";
+            /**
+             * 半径
+             */
+            public static final String radius = "radius";
+            /**
+             * 时间
+             */
+            public static final String time = "time";
+            /**
+             * 运行状态代码
+             */
+            public static final String loc_type = "loc_type";
+            /**
+             * 运动速度
+             */
+            public static final String speed = "speed";
+            /**
+             * 卫星数量
+             */
+            public static final String satellite = "satellite";
+            /**
+             * 运动方向
+             */
+            public static final String direction = "direction";
+            /**
+             * 地址
+             */
+            public static final String address = "address";
+            /**
+             * 运营商信息
+             */
+            public static final String operationer = "operationer";
+        }
+    }
+
     /**
      * 网络连接约定。
      * 
