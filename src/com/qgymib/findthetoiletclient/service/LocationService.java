@@ -25,7 +25,7 @@ public class LocationService extends Service {
     private LocationClient mLocationClient = null;
     private LocationClientOption mLocationClientOption = null;
     private DataTransfer.LocationTransfer mLocationTransfer = null;
-    private boolean isForce = false;
+    private boolean isForced = false;
 
     /**
      * 设置定位参数
@@ -103,6 +103,9 @@ public class LocationService extends Service {
                 // 定位有效
                 locationInfoBundle.putBoolean(
                         ConfigureInfo.Location.Key.isValid, true);
+                // 包含类别
+                locationInfoBundle.putString(ConfigureInfo.Location.Key.type,
+                        "GPS");
                 // 包含运动速度
                 locationInfoBundle.putFloat(ConfigureInfo.Location.Key.speed,
                         location.getSpeed());
@@ -117,10 +120,14 @@ public class LocationService extends Service {
                 // 定位有效
                 locationInfoBundle.putBoolean(
                         ConfigureInfo.Location.Key.isValid, true);
+                // 包含类别
+                locationInfoBundle.putString(ConfigureInfo.Location.Key.type,
+                        "NET");
                 // 包含地址
                 locationInfoBundle.putString(
                         ConfigureInfo.Location.Key.address,
                         location.getAddrStr());
+                // 运营商信息
                 locationInfoBundle.putInt(
                         ConfigureInfo.Location.Key.operationer,
                         location.getOperators());
@@ -148,7 +155,7 @@ public class LocationService extends Service {
 
             // 定位有效或者需要强制执行时，执行回调函数
             if (locationInfoBundle
-                    .getBoolean(ConfigureInfo.Location.Key.isValid) || isForce) {
+                    .getBoolean(ConfigureInfo.Location.Key.isValid) || isForced) {
                 mLocationTransfer.transAction(locationInfoBundle);
             }
         }
@@ -194,9 +201,9 @@ public class LocationService extends Service {
          *            当定位结果无效时是否仍然执行回调函数
          */
         public void bindLocationTransfer(
-                DataTransfer.LocationTransfer locationTransfer, boolean isForce) {
+                DataTransfer.LocationTransfer locationTransfer, boolean isForced) {
             mLocationTransfer = locationTransfer;
-            LocationService.this.isForce = isForce;
+            LocationService.this.isForced = isForced;
         }
 
         /**

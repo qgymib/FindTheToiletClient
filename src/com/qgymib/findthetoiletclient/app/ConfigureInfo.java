@@ -139,6 +139,10 @@ public final class ConfigureInfo {
              */
             public static final String radius = "radius";
             /**
+             * 定位类别：GPS/基站
+             */
+            public static final String type = "type";
+            /**
              * 时间
              */
             public static final String time = "time";
