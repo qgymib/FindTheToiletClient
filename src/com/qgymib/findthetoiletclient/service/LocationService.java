@@ -90,12 +90,11 @@ public class LocationService extends Service {
          */
         @Override
         public void onReceiveLocation(BDLocation location) {
-            // TODO 实现接收定位信息功能
+            // 若结果为空，则不作处理
             if (location == null) {
                 return;
             }
 
-            // TODO 实现包含定位信息的Bundle的封装
             Bundle locationInfoBundle = new Bundle();
 
             // 定位结果有效性检查
@@ -197,7 +196,7 @@ public class LocationService extends Service {
          * 
          * @param locationTransfer
          *            用于处理定位结果的回调函数
-         * @param isForce
+         * @param isForced
          *            当定位结果无效时是否仍然执行回调函数
          */
         public void bindLocationTransfer(
