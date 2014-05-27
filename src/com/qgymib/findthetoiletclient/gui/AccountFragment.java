@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.DataTransfer;
+import com.qgymib.findthetoiletclient.app.DataTransfer.ViewTransfer;
 
 /**
  * 用于显示账户相关的fragment。内部包含3个子视图：{@link LoginFragment}、{@link SignupFragment}、
@@ -18,13 +18,12 @@ import com.qgymib.findthetoiletclient.app.DataTransfer;
  * 
  * @author qgymib
  */
-public class AccountFragment extends Fragment implements
-        DataTransfer.ViewTransfer {
+public class AccountFragment extends Fragment implements ViewTransfer {
     public static final String fragmentTag = "account";
 
-    public AccountFragment(){
+    public AccountFragment() {
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

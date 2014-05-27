@@ -7,33 +7,38 @@ import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.app.DataTransfer.LocationTransfer;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class BaiduMapFragment extends Fragment {
+public class BaiduMapFragment extends Fragment implements LocationTransfer {
     public static final String fragmentTag = "baidumap";
-    
+
     private View rootView = null;
     private MapView mapView = null;
     private MapController mapController = null;
     private MKMapViewListener mMapListener = null;
+    private ServiceConnection mServiceConnection = null;
 
     public BaiduMapFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        initService();
     }
 
     @Override
@@ -133,26 +138,46 @@ public class BaiduMapFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-        // ((MainActivity) activity).onSectionAttached(sectionNumber);
     }
 
     @Override
     public void onDetach() {
-        // TODO Auto-generated method stub
         super.onDetach();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
         super.onConfigurationChanged(newConfig);
+    }
+
+    private void initService() {
+        if (mServiceConnection == null) {
+            mServiceConnection = new ServiceConnection() {
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    // TODO 断开服务操作
+
+                }
+
+                @Override
+                public void onServiceConnected(ComponentName name,
+                        IBinder service) {
+                    // TODO 连接服务操作
+                }
+            };
+        }
+    }
+
+    @Override
+    public void transAction(Bundle locationInfoBundle) {
+        // TODO Auto-generated method stub
+        
     }
 }
