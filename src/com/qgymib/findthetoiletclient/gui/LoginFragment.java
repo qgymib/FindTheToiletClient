@@ -175,7 +175,7 @@ public class LoginFragment extends Fragment {
                     ConfigureInfo.Account.permission = result;
                     // 通知父fragment跳转
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
-                    DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
+                    DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
                     dt.transAction(R.layout.fragment_account_info);
                 }
             }
@@ -190,7 +190,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AccountFragment accountFragment = (AccountFragment) getParentFragment();
-                DataTransfer.ViewTransferForAccount dt = (DataTransfer.ViewTransferForAccount) accountFragment;
+                DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
                 dt.transAction(R.layout.fragment_account_signup);
             }
         });

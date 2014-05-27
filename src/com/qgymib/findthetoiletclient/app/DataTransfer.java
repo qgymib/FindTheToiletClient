@@ -26,7 +26,7 @@ public class DataTransfer {
      * @see SignupFragment
      * @see InfoFragment
      */
-    public static interface ViewTransferForAccount {
+    public static interface ViewTransfer {
         /**
          * 子Fragment通过ViewID通知父Fragment需要切换的目标Fragment。
          * 

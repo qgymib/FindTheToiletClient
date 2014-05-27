@@ -19,7 +19,7 @@ import com.qgymib.findthetoiletclient.app.DataTransfer;
  * @author qgymib
  */
 public class AccountFragment extends Fragment implements
-        DataTransfer.ViewTransferForAccount {
+        DataTransfer.ViewTransfer {
     public static final String fragmentTag = "account";
 
     public AccountFragment(){
