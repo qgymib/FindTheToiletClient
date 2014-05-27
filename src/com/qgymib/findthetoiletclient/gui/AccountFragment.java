@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.app.DataTransfer;
 
 /**
  * 用于显示账户相关的fragment。内部包含3个子视图：{@link LoginFragment}、{@link SignupFragment}、
