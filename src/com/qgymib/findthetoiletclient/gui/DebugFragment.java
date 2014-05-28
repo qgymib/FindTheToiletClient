@@ -57,10 +57,17 @@ public class DebugFragment extends Fragment implements LocationTransfer {
         buffer.append(locationInfoBundle
                 .getDouble(ConfigureInfo.Location.Key.longitude));
 
-        buffer.append("\nLatitude");
+        buffer.append("\nLatitude:");
         buffer.append(locationInfoBundle
                 .getDouble(ConfigureInfo.Location.Key.latitude));
-        
+
+        buffer.append("\nRadius:");
+        buffer.append(locationInfoBundle
+                .getFloat(ConfigureInfo.Location.Key.radius));
+
         debugTextView.setText(buffer.toString());
+
+        debugTextView.refreshDrawableState();
+        containView.refreshDrawableState();
     }
 }

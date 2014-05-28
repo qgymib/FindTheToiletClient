@@ -2,7 +2,6 @@ package com.qgymib.findthetoiletclient.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -71,9 +70,9 @@ public class LocationService extends Service {
         // 定位模式：精度
         mLocationClientOption.setLocationMode(LocationMode.Hight_Accuracy);
         // 定位结果集
-        mLocationClientOption.setCoorType("bd0911");
+        mLocationClientOption.setCoorType(ConfigureInfo.Location.type);
         // 定位请求间隔
-        mLocationClientOption.setScanSpan(2000);
+        mLocationClientOption.setScanSpan(ConfigureInfo.Location.interval);
         // 是否包含地址信息
         mLocationClientOption.setIsNeedAddress(true);
         // 是否包含运动方向

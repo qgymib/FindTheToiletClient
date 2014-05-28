@@ -167,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements
 
         // 启动/绑定服务
         Intent intent = new Intent(this, LocationService.class);
-//        startService(intent);
+        // startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 

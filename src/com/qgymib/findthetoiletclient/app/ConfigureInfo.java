@@ -120,7 +120,29 @@ public final class ConfigureInfo {
         }
     }
 
+    /**
+     * 定位配置
+     * 
+     * @author qgymib
+     *
+     */
     public static final class Location {
+
+        /**
+         * 定位时间间隔
+         */
+        public static final int interval = 1000;
+        /**
+         * 定位结果集
+         */
+        public static final String type = "bd0911";
+        
+        /**
+         * 定位信息类别关键字
+         * 
+         * @author qgymib
+         *
+         */
         public static final class Key {
             /**
              * 定位结果有效性

@@ -71,7 +71,14 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.qgymib.findthetoiletclient.service.LocationService" />
+        <service
+            android:name="com.qgymib.findthetoiletclient.service.LocationService"
+            android:enabled="true" />
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
     </application>
 
 </manifest>
