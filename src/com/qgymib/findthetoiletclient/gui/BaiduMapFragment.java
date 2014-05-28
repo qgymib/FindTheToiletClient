@@ -7,8 +7,9 @@ import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.DataTransfer.LocationTransfer;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.service.LocationService;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -43,7 +44,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -169,15 +169,24 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                 @Override
                 public void onServiceConnected(ComponentName name,
                         IBinder service) {
-                    // TODO 连接服务操作
+                    // 注册定位回调函数
+                    ((LocationService.LocationServiceBinder) service)
+                            .bindLocationTransfer((LocationTransfer) BaiduMapFragment.this);
+                    // 开始定位
+                    ((LocationService.LocationServiceBinder) service)
+                            .startLocate();
                 }
             };
         }
     }
 
+    /**
+     * 此函数用于处理{@link LocationService}向{@link BaiduMapFragment}传递的数据，是回调函数，由
+     * {@link LocationService}在获取有效结果时调用
+     */
     @Override
     public void transAction(Bundle locationInfoBundle) {
-        // TODO Auto-generated method stub
-        
+        // TODO 百度地图获取到用户坐标的行为
+
     }
 }

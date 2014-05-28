@@ -1,4 +1,4 @@
-package com.qgymib.findthetoiletclient.app;
+package com.qgymib.findthetoiletclient.data;
 
 import android.os.Bundle;
 

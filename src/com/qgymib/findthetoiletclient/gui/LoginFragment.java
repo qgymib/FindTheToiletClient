@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.qgymib.findthetoiletclient.R;
 import com.qgymib.findthetoiletclient.app.ConfigureInfo;
-import com.qgymib.findthetoiletclient.app.DataTransfer;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.app.Tools;
+import com.qgymib.findthetoiletclient.data.DataTransfer;
 import com.qgymib.findthetoiletclient.service.NetworkService;
 
 /**

@@ -12,7 +12,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.qgymib.findthetoiletclient.app.ConfigureInfo;
-import com.qgymib.findthetoiletclient.app.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
 
 /**
  * 定位服务。依据用户提供（或默认）参数进行基于A-GPS或GPS的定位。
