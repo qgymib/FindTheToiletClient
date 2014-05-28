@@ -12,7 +12,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.qgymib.findthetoiletclient.app.ConfigureInfo;
-import com.qgymib.findthetoiletclient.app.DataTransfer;
+import com.qgymib.findthetoiletclient.app.DataTransfer.LocationTransfer;
 
 /**
  * 定位服务。依据用户提供（或默认）参数进行基于A-GPS或GPS的定位。
@@ -24,7 +24,7 @@ public class LocationService extends Service {
 
     private LocationClient mLocationClient = null;
     private LocationClientOption mLocationClientOption = null;
-    private DataTransfer.LocationTransfer mLocationTransfer = null;
+    private LocationTransfer mLocationTransfer = null;
     private boolean isForced = false;
 
     /**
@@ -175,7 +175,7 @@ public class LocationService extends Service {
     public class LocationServiceBinder extends Binder {
         /**
          * 开始定位。此函数应该在
-         * {@link #bindLocationTransfer(com.qgymib.findthetoiletclient.app.DataTransfer.LocationTransfer)}
+         * {@link #bindLocationTransfer(LocationTransfer)}
          * 之后调用。
          */
         public void startLocate() {
@@ -199,8 +199,8 @@ public class LocationService extends Service {
          * @param isForced
          *            当定位结果无效时是否仍然执行回调函数
          */
-        public void bindLocationTransfer(
-                DataTransfer.LocationTransfer locationTransfer, boolean isForced) {
+        public void bindLocationTransfer(LocationTransfer locationTransfer,
+                boolean isForced) {
             mLocationTransfer = locationTransfer;
             LocationService.this.isForced = isForced;
         }
@@ -213,8 +213,7 @@ public class LocationService extends Service {
          * @param locationTransfer
          *            用于处理定位结果的回调函数
          */
-        public void bindLocationTransfer(
-                DataTransfer.LocationTransfer locationTransfer) {
+        public void bindLocationTransfer(LocationTransfer locationTransfer) {
             bindLocationTransfer(locationTransfer, false);
         }
     }
