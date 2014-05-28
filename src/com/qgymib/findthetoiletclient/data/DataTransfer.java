@@ -37,7 +37,7 @@ public class DataTransfer {
     }
 
     /**
-     * 为LocationService与BaiduMapFragment设计的信息交互接口。
+     * 为LocationService与调用者设计的信息交互接口。
      * 
      * @author qgymib
      * @see LocationService
@@ -45,7 +45,7 @@ public class DataTransfer {
      */
     public static interface LocationTransfer {
         /**
-         * LocationService向BaiduMapFragment传递定位结果。
+         * LocationService向其调用者传递定位结果。
          * 
          * @param locationInfoBundle
          */

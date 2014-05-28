@@ -1,37 +1,56 @@
 package com.qgymib.findthetoiletclient.gui;
 
-import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.map.MKMapViewListener;
-import com.baidu.mapapi.map.MapController;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.FTTApplication;
-import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
-import com.qgymib.findthetoiletclient.service.LocationService;
-
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKMapViewListener;
+import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.app.ConfigureInfo;
+import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+
 public class BaiduMapFragment extends Fragment implements LocationTransfer {
     public static final String fragmentTag = "baidumap";
 
+    /**
+     * 根视图，用于承载其他视图
+     */
     private View rootView = null;
+    /**
+     * 百度地图视图
+     */
     private MapView mapView = null;
+    /**
+     * 百度地图控制器
+     */
     private MapController mapController = null;
+    /**
+     * 百度地图监听器
+     */
     private MKMapViewListener mMapListener = null;
-    private ServiceConnection mServiceConnection = null;
+    /**
+     * 承载用户地点信息
+     */
+    private LocationData locationData = null;
+    /**
+     * 定位图层
+     */
+    private MyLocationOverlay locationOverlay = null;
+    
 
     public BaiduMapFragment() {
     }
@@ -39,7 +58,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initService();
     }
 
     @Override
@@ -64,14 +82,33 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
             app.bMapManager.init(new FTTApplication.MyGeneralListener());
         }
 
+        // 注册根视图
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        // 注册地图视图
         mapView = (MapView) rootView.findViewById(R.id.bmapView);
+        // 注册地图控制器
         mapController = mapView.getController();
+        // 允许点击
         mapController.enableClick(true);
+        // 缩放级别
         mapController.setZoom(12);
+        // 中心位置
         mapController.setCenter(new GeoPoint((int) (39.945 * 1E6),
                 (int) (116.404 * 1E6)));
+        // 启用内置缩放控件
+        mapView.setBuiltInZoomControls(true);
+        // 初始化定位数据包
+        locationData = new LocationData();
+        // 初始化定位图层
+        locationOverlay = new MyLocationOverlay(mapView);
+        // 设置定位数据
+        locationOverlay.setData(locationData);
+        // 添加定位图层
+        mapView.getOverlays().add(locationOverlay);
+        // 开启方向功能
+        locationOverlay.enableCompass();
 
+        // 注册事件
         mMapListener = new MKMapViewListener() {
 
             @Override
@@ -111,6 +148,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
             }
         };
 
+        // 注册地图监听器
         mapView.regMapViewListener(FTTApplication.getInstance().bMapManager,
                 mMapListener);
 
@@ -156,37 +194,39 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
         super.onConfigurationChanged(newConfig);
     }
 
-    private void initService() {
-        if (mServiceConnection == null) {
-            mServiceConnection = new ServiceConnection() {
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    // TODO 断开服务操作
-
-                }
-
-                @Override
-                public void onServiceConnected(ComponentName name,
-                        IBinder service) {
-                    // 注册定位回调函数
-                    ((LocationService.LocationServiceBinder) service)
-                            .bindLocationTransfer((LocationTransfer) BaiduMapFragment.this);
-                    // 开始定位
-                    ((LocationService.LocationServiceBinder) service)
-                            .startLocate();
-                }
-            };
-        }
-    }
+    
 
     /**
-     * 此函数用于处理{@link LocationService}向{@link BaiduMapFragment}传递的数据，是回调函数，由
-     * {@link LocationService}在获取有效结果时调用
+     * 此函数用于处理接收到的定位信息
+     * 
+     * @param infoBundle
+     *            定位信息的封装
      */
     @Override
-    public void transAction(Bundle locationInfoBundle) {
-        // TODO 百度地图获取到用户坐标的行为
+    public void transAction(Bundle infoBundle) {
+        // 若未完全初始化之前就接受到定位数据，则抛弃此次数据
+        if (locationData == null) {
+            return;
+        }
 
+        // 取得定位精度
+        locationData.accuracy = infoBundle
+                .getFloat(ConfigureInfo.Location.Key.radius);
+        // 取得经度
+        locationData.longitude = infoBundle
+                .getDouble(ConfigureInfo.Location.Key.longitude);
+        // 取得纬度
+        locationData.latitude = infoBundle
+                .getDouble(ConfigureInfo.Location.Key.latitude);
+        // 取得运动方向
+        if (infoBundle.getFloat(ConfigureInfo.Location.Key.direction) != 0.0f) {
+            locationData.direction = infoBundle
+                    .getFloat(ConfigureInfo.Location.Key.direction);
+        }
+
+        // 更新定位数据
+        locationOverlay.setData(locationData);
+        // 刷新图层
+        mapView.refresh();
     }
 }

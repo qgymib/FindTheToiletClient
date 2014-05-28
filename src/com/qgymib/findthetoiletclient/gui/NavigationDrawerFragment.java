@@ -6,6 +6,7 @@ import com.qgymib.findthetoiletclient.R.id;
 import com.qgymib.findthetoiletclient.R.layout;
 import com.qgymib.findthetoiletclient.R.menu;
 import com.qgymib.findthetoiletclient.R.string;
+import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -71,7 +72,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("learning", "NavigationDrawerFragment onCreate");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onCreate");
         super.onCreate(savedInstanceState);
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
@@ -90,7 +91,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
-        Log.d("learning", "NavigationDrawerFragment onActivityCreated");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
@@ -99,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.d("learning", "NavigationDrawerFragment onCreateView");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onCreateView");
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,6 +117,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.section_map),
                         getString(R.string.section_account),
                         getString(R.string.section_settings),
+                        getString(R.string.section_debug)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -214,7 +216,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        Log.d("learning", "NavigationDrawerFragment onAttach");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onAttach");
         super.onAttach(activity);
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;
@@ -225,21 +227,21 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.d("learning", "NavigationDrawerFragment onDetach");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onDetach");
         super.onDetach();
         mCallbacks = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.d("learning", "NavigationDrawerFragment onSaveInstanceState");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.d("learning", "NavigationDrawerFragment onConfigurationChanged");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
         // Forward the new configuration the drawer toggle component.
         mDrawerToggle.onConfigurationChanged(newConfig);
@@ -247,7 +249,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.d("learning", "NavigationDrawerFragment onCreateOptionsMenu");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onCreateOptionsMenu");
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
@@ -259,7 +261,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("learning", "NavigationDrawerFragment onOptionsItemSelected");
+        Log.d(ConfigureInfo.Common.tag, "NavigationDrawerFragment onOptionsItemSelected");
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

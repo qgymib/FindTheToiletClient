@@ -2,9 +2,11 @@ package com.qgymib.findthetoiletclient.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -25,38 +27,22 @@ public class LocationService extends Service {
     private LocationClient mLocationClient = null;
     private LocationClientOption mLocationClientOption = null;
     private LocationTransfer mLocationTransfer = null;
+    private LocationReceiveListener locationReceiveListener = new LocationReceiveListener();
     private boolean isForced = false;
-
-    /**
-     * 设置定位参数
-     */
-    private void setLocationOptions() {
-        if (mLocationClient != null && mLocationClientOption == null) {
-            mLocationClientOption = new LocationClientOption();
-            // 定位模式：精度
-            mLocationClientOption.setLocationMode(LocationMode.Hight_Accuracy);
-            // 定位结果集
-            mLocationClientOption.setCoorType("bd0911");
-            // 定位请求间隔
-            mLocationClientOption.setScanSpan(1000);
-            // 是否包含地址信息
-            mLocationClientOption.setIsNeedAddress(true);
-            // 是否包含运动方向
-            mLocationClientOption.setNeedDeviceDirect(true);
-            // 设置参数
-            mLocationClient.setLocOption(mLocationClientOption);
-        }
-    }
+    private LocationServiceBinder binder = new LocationServiceBinder();
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(ConfigureInfo.Common.tag, "location service started");
         // 初始化定位sdk
         mLocationClient = new LocationClient(getApplicationContext());
         // 注册监听结果调用
-        mLocationClient.registerLocationListener(new LocationReceiveListener());
+        mLocationClient.registerLocationListener(locationReceiveListener);
         // 设置定位参数
         setLocationOptions();
+        // 启动定位sdk
+        mLocationClient.start();
     }
 
     @Override
@@ -67,7 +53,7 @@ public class LocationService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new LocationServiceBinder();
+        return binder;
     }
 
     @Override
@@ -75,6 +61,25 @@ public class LocationService extends Service {
         super.onDestroy();
         // 停止定位sdk
         mLocationClient.stop();
+    }
+
+    /**
+     * 设置定位参数
+     */
+    private void setLocationOptions() {
+        mLocationClientOption = new LocationClientOption();
+        // 定位模式：精度
+        mLocationClientOption.setLocationMode(LocationMode.Hight_Accuracy);
+        // 定位结果集
+        mLocationClientOption.setCoorType("bd0911");
+        // 定位请求间隔
+        mLocationClientOption.setScanSpan(2000);
+        // 是否包含地址信息
+        mLocationClientOption.setIsNeedAddress(true);
+        // 是否包含运动方向
+        mLocationClientOption.setNeedDeviceDirect(true);
+        // 设置参数
+        mLocationClient.setLocOption(mLocationClientOption);
     }
 
     /**
@@ -90,6 +95,8 @@ public class LocationService extends Service {
          */
         @Override
         public void onReceiveLocation(BDLocation location) {
+            Log.i(ConfigureInfo.Common.tag, "location info received");
+
             // 若结果为空，则不作处理
             if (location == null) {
                 return;
@@ -97,6 +104,9 @@ public class LocationService extends Service {
 
             Bundle locationInfoBundle = new Bundle();
 
+            // 包含运行状态
+            locationInfoBundle.putInt(ConfigureInfo.Location.Key.loc_type,
+                    location.getLocType());
             // 定位结果有效性检查
             if (location.getLocType() == BDLocation.TypeGpsLocation) {
                 // 定位有效
@@ -148,13 +158,13 @@ public class LocationService extends Service {
             // 包含时间
             locationInfoBundle.putString(ConfigureInfo.Location.Key.time,
                     location.getTime());
-            // 包含运行状态
-            locationInfoBundle.putInt(ConfigureInfo.Location.Key.loc_type,
-                    location.getLocType());
+
+            Log.i(ConfigureInfo.Common.tag, "location info packaged");
 
             // 定位有效或者需要强制执行时，执行回调函数
             if (locationInfoBundle
                     .getBoolean(ConfigureInfo.Location.Key.isValid) || isForced) {
+                Log.i(ConfigureInfo.Common.tag, "location info sended");
                 mLocationTransfer.transAction(locationInfoBundle);
             }
         }
@@ -174,12 +184,26 @@ public class LocationService extends Service {
      */
     public class LocationServiceBinder extends Binder {
         /**
-         * 开始定位。此函数应该在
-         * {@link #bindLocationTransfer(LocationTransfer)}
-         * 之后调用。
+         * 开始定位。此函数应该在 {@link #bindLocationTransfer(LocationTransfer)} 之后调用。
          */
         public void startLocate() {
-            mLocationClient.start();
+            Log.i(ConfigureInfo.Common.tag, "startLocate");
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    if (mLocationClient.isStarted()) {
+                        Log.i(ConfigureInfo.Common.tag, "定位sdk已启动");
+                        mLocationClient.requestLocation();
+                    } else {
+                        Log.i(ConfigureInfo.Common.tag, "定位sdk启动失败");
+                    }
+
+                }
+            }).start();
+
         }
 
         /**
