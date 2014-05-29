@@ -33,5 +33,6 @@
     <string name="error_passwd_invalid">The password is incorrect.</string>
     <string name="error_unknow">Unknow Error</string>
     <string name="local_vaild_for_login_failed">Username or Password incorrect. Please double check.</string>
+    <string name="description_imageView_locate">this view is used to center the map where the user is.</string>
 
 </resources>

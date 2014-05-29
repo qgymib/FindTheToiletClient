@@ -136,7 +136,7 @@ public final class ConfigureInfo {
          * 定位结果集
          */
         public static final String type = "bd0911";
-        
+
         /**
          * 定位信息类别关键字
          * 
@@ -193,6 +193,16 @@ public final class ConfigureInfo {
              */
             public static final String operationer = "operationer";
         }
+    }
+
+    /**
+     * 百度地图相关参数
+     * 
+     * @author qgymib
+     *
+     */
+    public static final class Map {
+        public static final int zoom_level = 17;
     }
 
     /**

@@ -184,9 +184,6 @@ public class MainActivity extends ActionBarActivity implements
         fragmentList.add(new SettingsFragment());
         fragmentTagList.add(SettingsFragment.fragmentTag);
 
-        fragmentList.add(new DebugFragment());
-        fragmentTagList.add(DebugFragment.fragmentTag);
-
         for (int i = 0; i < fragmentList.size(); i++) {
             fragmentManager
                     .beginTransaction()
@@ -255,14 +252,6 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void transAction(Bundle locationInfoBundle) {
         if (fragmentManager != null) {
-            // 向DebugFragment分发信息
-            if (locationInfoBundle
-                    .getBoolean(ConfigureInfo.Location.Key.isValid)) {
-                ((LocationTransfer) fragmentManager
-                        .findFragmentByTag(DebugFragment.fragmentTag))
-                        .transAction(locationInfoBundle);
-            }
-
             // 向BaiduMapFragment分发信息
             ((LocationTransfer) fragmentManager
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
