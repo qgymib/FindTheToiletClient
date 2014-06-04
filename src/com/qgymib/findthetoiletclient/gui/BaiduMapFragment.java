@@ -1,11 +1,11 @@
 package com.qgymib.findthetoiletclient.gui;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -81,6 +81,18 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
      * 是否跟踪
      */
     private boolean isFollowed = true;
+    /**
+     * 定时任务
+     */
+    private TimerTask task = null;
+    /**
+     * 定时器
+     */
+    private Timer timer = null;
+    /**
+     * 标记是否接受到了定位信息
+     */
+    private boolean hasLocationData = false;
 
     public BaiduMapFragment() {
     }
@@ -88,6 +100,19 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 初始化定时器任务
+        task = new TimerTask() {
+
+            @Override
+            public void run() {
+                if (hasLocationData) {
+                    mSearch.reverseGeocode(new GeoPoint(
+                            (int) (PackagedInfo.Latitude * 1E6),
+                            (int) (PackagedInfo.Longitude * 1E6)));
+                }
+            }
+        };
     }
 
     @Override
@@ -167,8 +192,9 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                         // 用户移动地图时不再自动校准
                         isFollowed = false;
                         // 设置图标为非跟踪图标
-                        locateImageView.setImageDrawable(getResources()
-                                .getDrawable(R.drawable.locate_style_untracked));
+                        locateImageView
+                                .setImageDrawable(getResources().getDrawable(
+                                        R.drawable.locate_style_untracked));
                     }
 
                     @Override
@@ -206,6 +232,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                 PackagedInfo.Rotate = mapStatus.rotate;
                 PackagedInfo.Center = mapStatus.targetGeo;
 
+                // 显示调试信息
                 showDebugInfo();
             }
         });
@@ -262,10 +289,17 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                     MKGeocoderAddressComponent mkac = result.addressComponents;
                     PackagedInfo.City = mkac.city;
                 }
+
+                // 显示调试信息
+                showDebugInfo();
             }
         });
 
         infoView = (TextView) rootView.findViewById(R.id.textView_map_info);
+
+        // 初始化定时器
+        timer = new Timer();
+        timer.schedule(task, 5 * 1000);
 
         return rootView;
     }
@@ -321,6 +355,9 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
         if (locationData == null) {
             return;
         }
+
+        // 标记接收到了定位信息
+        hasLocationData = true;
 
         // 取得定位精度
         locationData.accuracy = infoBundle

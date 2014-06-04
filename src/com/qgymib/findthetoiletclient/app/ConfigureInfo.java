@@ -37,6 +37,10 @@ public final class ConfigureInfo {
          * 单一任务执行时间上限，单位 毫秒
          */
         public static final long maximum_task_execution_time = 10 * 1000;
+        /**
+         * 配置文件名称
+         */
+        public static final String preferences = "FindTheToilet";
     }
 
     /**

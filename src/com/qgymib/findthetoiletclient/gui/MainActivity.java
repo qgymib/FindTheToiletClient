@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -67,6 +68,11 @@ public class MainActivity extends ActionBarActivity implements
      * navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    /**
+     * 配置管理
+     */
+    private SharedPreferences preferences = getSharedPreferences(
+            ConfigureInfo.Common.preferences, MODE_PRIVATE);
 
     /**
      * Used to store the last screen title. For use in
@@ -77,6 +83,9 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(ConfigureInfo.Common.tag, "MainActivity onCreate");
+
+        // 取得配置信息
+        initPreferences();
 
         // 启动定位服务
         initService();
@@ -106,6 +115,9 @@ public class MainActivity extends ActionBarActivity implements
         // 结束线程池
         FTTApplication app = (FTTApplication) getApplication();
         app.shutdownNetworkSerivce();
+
+        // 更新配置信息
+        updatePreferences();
     }
 
     @Override
@@ -257,5 +269,38 @@ public class MainActivity extends ActionBarActivity implements
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
                     .transAction(locationInfoBundle);
         }
+    }
+
+    /**
+     * 从配置文件中取得配置信息
+     */
+    private void initPreferences() {
+        ConfigureInfo.Account.isLogin = preferences
+                .getBoolean("isLogin", false);
+        ConfigureInfo.Account.username = preferences
+                .getString("username", null);
+        ConfigureInfo.Account.passwd_md5 = preferences.getString("passwd_md5",
+                null);
+        ConfigureInfo.Account.email = preferences.getString("email", null);
+        ConfigureInfo.Account.permission = preferences.getInt("permission",
+                ConfigureInfo.Account.Permission.normal);
+    }
+
+    /**
+     * 更新配置信息
+     */
+    private void updatePreferences() {
+        preferences.edit().putBoolean("isLogin", ConfigureInfo.Account.isLogin)
+                .commit();
+        preferences.edit()
+                .putString("username", ConfigureInfo.Account.username).commit();
+        preferences.edit()
+                .putString("passwd_md5", ConfigureInfo.Account.passwd_md5)
+                .commit();
+        preferences.edit().putString("email", ConfigureInfo.Account.email)
+                .commit();
+        preferences.edit()
+                .putInt("permission", ConfigureInfo.Account.permission)
+                .commit();
     }
 }
