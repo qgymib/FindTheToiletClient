@@ -30,7 +30,7 @@ public class DataBaseManager {
      * @param locationVersion
      *            信息版本
      * @param locationValueSet
-     *            洗手间信息
+     *            洗手间信息集
      */
     public void insertLocationSet(String locationKey, int locationVersion,
             String locationValueSet) {

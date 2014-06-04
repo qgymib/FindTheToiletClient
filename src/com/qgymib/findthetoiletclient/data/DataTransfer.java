@@ -64,7 +64,7 @@ public class DataTransfer {
          */
         public long version = 0;
         /**
-         * 洗手间地理信息
+         * 洗手间地理信息集
          */
         public String value = null;
     }
