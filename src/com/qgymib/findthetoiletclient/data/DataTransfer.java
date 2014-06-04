@@ -51,4 +51,21 @@ public class DataTransfer {
          */
         public void transAction(Bundle locationInfoBundle);
     }
+
+    /**
+     * 城市洗手间信息封装
+     * 
+     * @author qgymib
+     *
+     */
+    public static final class LocationInfo {
+        /**
+         * 数据版本
+         */
+        public long version = 0;
+        /**
+         * 洗手间地理信息
+         */
+        public String value = null;
+    }
 }

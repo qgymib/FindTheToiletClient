@@ -14,7 +14,7 @@ public final class ConfigData {
      * 从配置文件中取得配置信息
      */
     public static void initPreferences(SharedPreferences preferences) {
-        
+
         ConfigData.Account.isLogin = preferences.getBoolean("isLogin", false);
         ConfigData.Account.username = preferences.getString("username", null);
         ConfigData.Account.passwd_md5 = preferences.getString("passwd_md5",
@@ -23,22 +23,21 @@ public final class ConfigData {
         ConfigData.Account.permission = preferences.getInt("permission",
                 ConfigData.Account.Permission.normal);
     }
-    
+
     /**
      * 更新配置信息
      */
     public static void updatePreferences(SharedPreferences preferences) {
         preferences.edit().putBoolean("isLogin", ConfigData.Account.isLogin)
                 .commit();
-        preferences.edit()
-                .putString("username", ConfigData.Account.username).commit();
+        preferences.edit().putString("username", ConfigData.Account.username)
+                .commit();
         preferences.edit()
                 .putString("passwd_md5", ConfigData.Account.passwd_md5)
                 .commit();
         preferences.edit().putString("email", ConfigData.Account.email)
                 .commit();
-        preferences.edit()
-                .putInt("permission", ConfigData.Account.permission)
+        preferences.edit().putInt("permission", ConfigData.Account.permission)
                 .commit();
     }
 
@@ -231,6 +230,27 @@ public final class ConfigData {
              */
             public static final String operationer = "operationer";
         }
+    }
+
+    /**
+     * SQLite相关参数
+     * 
+     * @author qgymib
+     *
+     */
+    public static final class Database {
+        /**
+         * 数据库名称
+         */
+        public static final String name = "ftt.db";
+        /**
+         * 表名称
+         */
+        public static final String table_name = "location";
+        /**
+         * 数据库版本
+         */
+        public static final int version = 1;
     }
 
     /**
