@@ -19,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.app.Tools;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer;
 import com.qgymib.findthetoiletclient.service.NetworkService;
 
@@ -119,22 +119,22 @@ public class LoginFragment extends Fragment {
                         String warnningInfo = null;
                         switch (result) {
                         // 网络连接异常
-                        case ConfigureInfo.Account.Errno.connection_error:
+                        case ConfigData.Account.Errno.connection_error:
                             warnningInfo = getString(R.string.error_connection);
                             break;
 
                         // 用户名不存在
-                        case ConfigureInfo.Account.Errno.username_invalid:
+                        case ConfigData.Account.Errno.username_invalid:
                             warnningInfo = getString(R.string.error_username_invalid);
                             break;
 
                         // 密码错误
-                        case ConfigureInfo.Account.Errno.passwd_invalid:
+                        case ConfigData.Account.Errno.passwd_invalid:
                             warnningInfo = getString(R.string.error_passwd_invalid);
                             break;
 
                         // 未知错误
-                        case ConfigureInfo.Account.Errno.unknown:
+                        case ConfigData.Account.Errno.unknown:
                             // 任何不在列表中的错误均为未知错误
                         default:
                             warnningInfo = getString(R.string.error_unknow);
@@ -147,18 +147,18 @@ public class LoginFragment extends Fragment {
                     }
 
                 } catch (InterruptedException e) {
-                    Log.e(ConfigureInfo.Common.tag,
+                    Log.e(ConfigData.Common.tag,
                             "login asynctask was interrupted");
-                    result = ConfigureInfo.Account.Errno.unknown;
+                    result = ConfigData.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
                             "login asynctask was interrupted",
                             Toast.LENGTH_LONG).show();
                 } catch (ExecutionException e) {
-                    Log.e(ConfigureInfo.Common.tag,
+                    Log.e(ConfigData.Common.tag,
                             "login asynctask executed failed");
-                    result = ConfigureInfo.Account.Errno.unknown;
+                    result = ConfigData.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -172,7 +172,7 @@ public class LoginFragment extends Fragment {
                 // 若登录成功，则跳转到InfoFragment
                 if (result >= 0) {
                     // 设置用户权限
-                    ConfigureInfo.Account.permission = result;
+                    ConfigData.Account.permission = result;
                     // 通知父fragment跳转
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
@@ -221,7 +221,7 @@ public class LoginFragment extends Fragment {
         boolean result = true;
 
         // 验证用户名
-        Matcher usernameMatcher = Pattern.compile(ConfigureInfo.Regex.username)
+        Matcher usernameMatcher = Pattern.compile(ConfigData.Regex.username)
                 .matcher(username);
         if (usernameMatcher.find()) {
             // 若用户名有效
@@ -233,7 +233,7 @@ public class LoginFragment extends Fragment {
 
         // 用户名验证通过则可以进行密码验证
         if (result) {
-            Matcher passwdMatcher = Pattern.compile(ConfigureInfo.Regex.passwd)
+            Matcher passwdMatcher = Pattern.compile(ConfigData.Regex.passwd)
                     .matcher(passwd);
             if (passwdMatcher.find()) {
                 // 若密码合法

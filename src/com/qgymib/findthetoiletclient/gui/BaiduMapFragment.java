@@ -38,8 +38,8 @@ import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.baidu.mapapi.search.MKWalkingRouteResult;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
 
 public class BaiduMapFragment extends Fragment implements LocationTransfer {
@@ -146,7 +146,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
         // 允许点击
         mapController.enableClick(true);
         // 缩放级别
-        mapController.setZoom(ConfigureInfo.Map.zoom_level);
+        mapController.setZoom(ConfigData.Map.zoom_level);
         // 中心位置
         mapController.setCenter(new GeoPoint((int) (39.945 * 1E6),
                 (int) (116.404 * 1E6)));
@@ -361,17 +361,17 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
         // 取得定位精度
         locationData.accuracy = infoBundle
-                .getFloat(ConfigureInfo.Location.Key.radius);
+                .getFloat(ConfigData.Location.Key.radius);
         // 取得经度
         locationData.longitude = infoBundle
-                .getDouble(ConfigureInfo.Location.Key.longitude);
+                .getDouble(ConfigData.Location.Key.longitude);
         // 取得纬度
         locationData.latitude = infoBundle
-                .getDouble(ConfigureInfo.Location.Key.latitude);
+                .getDouble(ConfigData.Location.Key.latitude);
         // 取得运动方向
-        if (infoBundle.getFloat(ConfigureInfo.Location.Key.direction) != 0.0f) {
+        if (infoBundle.getFloat(ConfigData.Location.Key.direction) != 0.0f) {
             locationData.direction = infoBundle
-                    .getFloat(ConfigureInfo.Location.Key.direction);
+                    .getFloat(ConfigData.Location.Key.direction);
         }
 
         // 更新定位数据
@@ -387,19 +387,19 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
         // 更新调试信息
         PackagedInfo.Code = infoBundle
-                .getInt(ConfigureInfo.Location.Key.loc_type);
+                .getInt(ConfigData.Location.Key.loc_type);
         PackagedInfo.isValid = infoBundle
-                .getBoolean(ConfigureInfo.Location.Key.isValid);
+                .getBoolean(ConfigData.Location.Key.isValid);
         PackagedInfo.Type = infoBundle
-                .getString(ConfigureInfo.Location.Key.type);
+                .getString(ConfigData.Location.Key.type);
         PackagedInfo.Time = infoBundle
-                .getString(ConfigureInfo.Location.Key.time);
+                .getString(ConfigData.Location.Key.time);
         PackagedInfo.Longitude = infoBundle
-                .getDouble(ConfigureInfo.Location.Key.longitude);
+                .getDouble(ConfigData.Location.Key.longitude);
         PackagedInfo.Latitude = infoBundle
-                .getDouble(ConfigureInfo.Location.Key.latitude);
+                .getDouble(ConfigData.Location.Key.latitude);
         PackagedInfo.Radius = infoBundle
-                .getFloat(ConfigureInfo.Location.Key.radius);
+                .getFloat(ConfigData.Location.Key.radius);
 
         // 显示调试信息
         showDebugInfo();
@@ -408,10 +408,10 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
     /**
      * 显示BaiduMap相关的详细信息，仅developer用户可用
      * 
-     * @see ConfigureInfo.Account.Permission
+     * @see ConfigData.Account.Permission
      */
     private void showDebugInfo() {
-        if (ConfigureInfo.Account.permission == ConfigureInfo.Account.Permission.developer) {
+        if (ConfigData.Account.permission == ConfigData.Account.Permission.developer) {
             StringBuffer buffer = new StringBuffer();
 
             buffer.append("Code: ");

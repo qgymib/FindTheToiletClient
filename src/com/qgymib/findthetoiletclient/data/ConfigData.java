@@ -1,4 +1,6 @@
-package com.qgymib.findthetoiletclient.app;
+package com.qgymib.findthetoiletclient.data;
+
+import android.content.SharedPreferences;
 
 /**
  * ConfigureInfo用于储存所有配置信息。
@@ -6,7 +8,39 @@ package com.qgymib.findthetoiletclient.app;
  * @author qgymib
  *
  */
-public final class ConfigureInfo {
+public final class ConfigData {
+
+    /**
+     * 从配置文件中取得配置信息
+     */
+    public static void initPreferences(SharedPreferences preferences) {
+        
+        ConfigData.Account.isLogin = preferences.getBoolean("isLogin", false);
+        ConfigData.Account.username = preferences.getString("username", null);
+        ConfigData.Account.passwd_md5 = preferences.getString("passwd_md5",
+                null);
+        ConfigData.Account.email = preferences.getString("email", null);
+        ConfigData.Account.permission = preferences.getInt("permission",
+                ConfigData.Account.Permission.normal);
+    }
+    
+    /**
+     * 更新配置信息
+     */
+    public static void updatePreferences(SharedPreferences preferences) {
+        preferences.edit().putBoolean("isLogin", ConfigData.Account.isLogin)
+                .commit();
+        preferences.edit()
+                .putString("username", ConfigData.Account.username).commit();
+        preferences.edit()
+                .putString("passwd_md5", ConfigData.Account.passwd_md5)
+                .commit();
+        preferences.edit().putString("email", ConfigData.Account.email)
+                .commit();
+        preferences.edit()
+                .putInt("permission", ConfigData.Account.permission)
+                .commit();
+    }
 
     /**
      * 可修改的用户自定义设置。在软件启动时加载，视实际需要可动态刷新。
@@ -71,7 +105,7 @@ public final class ConfigureInfo {
         /**
          * 用户权限。默认为普通用户。
          */
-        public static int permission = ConfigureInfo.Account.Permission.developer;
+        public static int permission = ConfigData.Account.Permission.developer;
 
         /**
          * 用户权限列表。所有数值均大于零以表示权限。

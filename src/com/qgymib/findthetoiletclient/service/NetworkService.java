@@ -10,7 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 import android.util.Log;
 
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 
 /**
  * 网络通信线程。线程生命周期需要与MainActivity同步。
@@ -27,7 +27,7 @@ public class NetworkService {
      */
     public void init() {
         taskThreadPool = Executors
-                .newFixedThreadPool(ConfigureInfo.Common.thread_pool_size);
+                .newFixedThreadPool(ConfigData.Common.thread_pool_size);
     }
 
     /**
@@ -63,7 +63,7 @@ public class NetworkService {
      * @return 用户权限或错误编码
      */
     public int requestLogin(String username, String passwd_md5) {
-        int identity = ConfigureInfo.Account.Errno.connection_error;
+        int identity = ConfigData.Account.Errno.connection_error;
 
         Future<Integer> future = taskThreadPool
                 .submit(new NetworkTaskManager().new LoginTask(username,
@@ -72,21 +72,21 @@ public class NetworkService {
         try {
             // 取得运行结果
             identity = future.get(
-                    ConfigureInfo.Common.maximum_task_execution_time,
+                    ConfigData.Common.maximum_task_execution_time,
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // 任务中断
-            identity = ConfigureInfo.Account.Errno.unknown;
-            Log.e(ConfigureInfo.Common.tag,
+            identity = ConfigData.Account.Errno.unknown;
+            Log.e(ConfigData.Common.tag,
                     "login task was interrupted while waiting ");
         } catch (ExecutionException e) {
             // 任务抛出异常
-            identity = ConfigureInfo.Account.Errno.unknown;
-            Log.w(ConfigureInfo.Common.tag, "login task executed failed");
+            identity = ConfigData.Account.Errno.unknown;
+            Log.w(ConfigData.Common.tag, "login task executed failed");
             e.getCause().printStackTrace();
         } catch (TimeoutException e) {
             // 超出指定运行时间。最可能的是网络连接异常
-            identity = ConfigureInfo.Account.Errno.connection_error;
+            identity = ConfigData.Account.Errno.connection_error;
             // 立即中断任务
             if (!future.cancel(true)) {
                 // 若任务无法中断
@@ -106,7 +106,7 @@ public class NetworkService {
      * @return 任何大于等于0的数值代表用户权限，小于0的数值为具体错误代码
      */
     public int requestSignup(String username, String passwd_md5) {
-        int result = ConfigureInfo.Account.Errno.connection_error;
+        int result = ConfigData.Account.Errno.connection_error;
 
         Future<Integer> future = taskThreadPool
                 .submit(new NetworkTaskManager().new SignupTask(username,
@@ -114,21 +114,21 @@ public class NetworkService {
 
         try {
             result = future.get(
-                    ConfigureInfo.Common.maximum_task_execution_time,
+                    ConfigData.Common.maximum_task_execution_time,
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // 任务中断
-            result = ConfigureInfo.Account.Errno.unknown;
-            Log.e(ConfigureInfo.Common.tag,
+            result = ConfigData.Account.Errno.unknown;
+            Log.e(ConfigData.Common.tag,
                     "singup task was interrupted while waiting ");
         } catch (ExecutionException e) {
             // 任务抛出异常
-            result = ConfigureInfo.Account.Errno.unknown;
-            Log.w(ConfigureInfo.Common.tag, "signup task executed failed");
+            result = ConfigData.Account.Errno.unknown;
+            Log.w(ConfigData.Common.tag, "signup task executed failed");
             e.getCause().printStackTrace();
         } catch (TimeoutException e) {
             // 超出指定运行时间。最可能的是网络连接异常
-            result = ConfigureInfo.Account.Errno.connection_error;
+            result = ConfigData.Account.Errno.connection_error;
             // 立即中断任务
             if (!future.cancel(true)) {
                 // 若任务无法中断

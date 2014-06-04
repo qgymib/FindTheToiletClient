@@ -12,7 +12,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
 
 /**
@@ -33,7 +33,7 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(ConfigureInfo.Common.tag, "location service started");
+        Log.i(ConfigData.Common.tag, "location service started");
         // 初始化定位sdk
         mLocationClient = new LocationClient(getApplicationContext());
         // 注册监听结果调用
@@ -70,9 +70,9 @@ public class LocationService extends Service {
         // 定位模式：精度
         mLocationClientOption.setLocationMode(LocationMode.Hight_Accuracy);
         // 定位结果集
-        mLocationClientOption.setCoorType(ConfigureInfo.Location.type);
+        mLocationClientOption.setCoorType(ConfigData.Location.type);
         // 定位请求间隔
-        mLocationClientOption.setScanSpan(ConfigureInfo.Location.interval);
+        mLocationClientOption.setScanSpan(ConfigData.Location.interval);
         // 是否包含地址信息
         mLocationClientOption.setIsNeedAddress(true);
         // 是否包含运动方向
@@ -94,7 +94,7 @@ public class LocationService extends Service {
          */
         @Override
         public void onReceiveLocation(BDLocation location) {
-            Log.i(ConfigureInfo.Common.tag, "location info received");
+            Log.i(ConfigData.Common.tag, "location info received");
 
             // 若结果为空，则不作处理
             if (location == null) {
@@ -104,66 +104,66 @@ public class LocationService extends Service {
             Bundle locationInfoBundle = new Bundle();
 
             // 包含运行状态
-            locationInfoBundle.putInt(ConfigureInfo.Location.Key.loc_type,
+            locationInfoBundle.putInt(ConfigData.Location.Key.loc_type,
                     location.getLocType());
             // 定位结果有效性检查
             if (location.getLocType() == BDLocation.TypeGpsLocation) {
                 // 定位有效
                 locationInfoBundle.putBoolean(
-                        ConfigureInfo.Location.Key.isValid, true);
+                        ConfigData.Location.Key.isValid, true);
                 // 包含类别
-                locationInfoBundle.putString(ConfigureInfo.Location.Key.type,
+                locationInfoBundle.putString(ConfigData.Location.Key.type,
                         "GPS");
                 // 包含运动速度
-                locationInfoBundle.putFloat(ConfigureInfo.Location.Key.speed,
+                locationInfoBundle.putFloat(ConfigData.Location.Key.speed,
                         location.getSpeed());
                 // 包含卫星数量
-                locationInfoBundle.putInt(ConfigureInfo.Location.Key.satellite,
+                locationInfoBundle.putInt(ConfigData.Location.Key.satellite,
                         location.getSatelliteNumber());
                 // 包含运动方向
                 locationInfoBundle.putFloat(
-                        ConfigureInfo.Location.Key.direction,
+                        ConfigData.Location.Key.direction,
                         location.getDirection());
             } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
                 // 定位有效
                 locationInfoBundle.putBoolean(
-                        ConfigureInfo.Location.Key.isValid, true);
+                        ConfigData.Location.Key.isValid, true);
                 // 包含类别
-                locationInfoBundle.putString(ConfigureInfo.Location.Key.type,
+                locationInfoBundle.putString(ConfigData.Location.Key.type,
                         "NET");
                 // 包含地址
                 locationInfoBundle.putString(
-                        ConfigureInfo.Location.Key.address,
+                        ConfigData.Location.Key.address,
                         location.getAddrStr());
                 // 运营商信息
                 locationInfoBundle.putInt(
-                        ConfigureInfo.Location.Key.operationer,
+                        ConfigData.Location.Key.operationer,
                         location.getOperators());
             } else {
                 // 定位失败
                 locationInfoBundle.putBoolean(
-                        ConfigureInfo.Location.Key.isValid, false);
+                        ConfigData.Location.Key.isValid, false);
             }
 
             // 包含半径
-            locationInfoBundle.putFloat(ConfigureInfo.Location.Key.radius,
+            locationInfoBundle.putFloat(ConfigData.Location.Key.radius,
                     location.getRadius());
             // 包含经度
-            locationInfoBundle.putDouble(ConfigureInfo.Location.Key.longitude,
+            locationInfoBundle.putDouble(ConfigData.Location.Key.longitude,
                     location.getLongitude());
             // 包含纬度
-            locationInfoBundle.putDouble(ConfigureInfo.Location.Key.latitude,
+            locationInfoBundle.putDouble(ConfigData.Location.Key.latitude,
                     location.getLatitude());
             // 包含时间
-            locationInfoBundle.putString(ConfigureInfo.Location.Key.time,
+            locationInfoBundle.putString(ConfigData.Location.Key.time,
                     location.getTime());
 
-            Log.i(ConfigureInfo.Common.tag, "location info packaged");
+            Log.i(ConfigData.Common.tag, "location info packaged");
 
             // 定位有效或者需要强制执行时，执行回调函数
             if (locationInfoBundle
-                    .getBoolean(ConfigureInfo.Location.Key.isValid) || isForced) {
-                Log.i(ConfigureInfo.Common.tag, "location info sended");
+                    .getBoolean(ConfigData.Location.Key.isValid) || isForced) {
+                Log.i(ConfigData.Common.tag, "location info sended");
                 mLocationTransfer.transAction(locationInfoBundle);
             }
         }
@@ -186,7 +186,7 @@ public class LocationService extends Service {
          * 开始定位。此函数应该在 {@link #bindLocationTransfer(LocationTransfer)} 之后调用。
          */
         public void startLocate() {
-            Log.i(ConfigureInfo.Common.tag, "startLocate");
+            Log.i(ConfigData.Common.tag, "startLocate");
 
             new Thread(new Runnable() {
 
@@ -194,10 +194,10 @@ public class LocationService extends Service {
                 public void run() {
 
                     if (mLocationClient.isStarted()) {
-                        Log.i(ConfigureInfo.Common.tag, "定位sdk已启动");
+                        Log.i(ConfigData.Common.tag, "定位sdk已启动");
                         mLocationClient.requestLocation();
                     } else {
-                        Log.i(ConfigureInfo.Common.tag, "定位sdk启动失败");
+                        Log.i(ConfigData.Common.tag, "定位sdk启动失败");
                     }
 
                 }

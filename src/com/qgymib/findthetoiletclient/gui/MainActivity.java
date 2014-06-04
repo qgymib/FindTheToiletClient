@@ -8,8 +8,8 @@ import com.qgymib.findthetoiletclient.R.id;
 import com.qgymib.findthetoiletclient.R.layout;
 import com.qgymib.findthetoiletclient.R.menu;
 import com.qgymib.findthetoiletclient.R.string;
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
 import com.qgymib.findthetoiletclient.gui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.qgymib.findthetoiletclient.service.LocationService;
@@ -68,11 +68,6 @@ public class MainActivity extends ActionBarActivity implements
      * navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    /**
-     * 配置管理
-     */
-    private SharedPreferences preferences = getSharedPreferences(
-            ConfigureInfo.Common.preferences, MODE_PRIVATE);
 
     /**
      * Used to store the last screen title. For use in
@@ -82,10 +77,11 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(ConfigureInfo.Common.tag, "MainActivity onCreate");
+        Log.d(ConfigData.Common.tag, "MainActivity onCreate");
 
         // 取得配置信息
-        initPreferences();
+        ConfigData
+                .initPreferences(((FTTApplication) getApplication()).preferences);
 
         // 启动定位服务
         initService();
@@ -117,12 +113,13 @@ public class MainActivity extends ActionBarActivity implements
         app.shutdownNetworkSerivce();
 
         // 更新配置信息
-        updatePreferences();
+        ConfigData
+                .updatePreferences(((FTTApplication) getApplication()).preferences);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Log.d(ConfigureInfo.Common.tag,
+        Log.d(ConfigData.Common.tag,
                 "MainActivity onNavigationDrawerItemSelected " + position);
         // 注册fragment管理器
         fragmentManager = getSupportFragmentManager();
@@ -212,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements
      * @param sectionNumber
      */
     private void onSectionAttached(int sectionNumber) {
-        Log.d(ConfigureInfo.Common.tag, "MainActivity onSectionAttached");
+        Log.d(ConfigData.Common.tag, "MainActivity onSectionAttached");
         switch (sectionNumber) {
         case 0:
             mTitle = getString(R.string.section_map);
@@ -227,7 +224,7 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     private void restoreActionBar() {
-        Log.d(ConfigureInfo.Common.tag, "MainActivity restoreActionBar");
+        Log.d(ConfigData.Common.tag, "MainActivity restoreActionBar");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -236,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(ConfigureInfo.Common.tag, "MainActivity onCreateOptionsMenu");
+        Log.d(ConfigData.Common.tag, "MainActivity onCreateOptionsMenu");
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
@@ -250,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(ConfigureInfo.Common.tag, "MainActivity onOptionsItemSelected");
+        Log.d(ConfigData.Common.tag, "MainActivity onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -269,38 +266,5 @@ public class MainActivity extends ActionBarActivity implements
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
                     .transAction(locationInfoBundle);
         }
-    }
-
-    /**
-     * 从配置文件中取得配置信息
-     */
-    private void initPreferences() {
-        ConfigureInfo.Account.isLogin = preferences
-                .getBoolean("isLogin", false);
-        ConfigureInfo.Account.username = preferences
-                .getString("username", null);
-        ConfigureInfo.Account.passwd_md5 = preferences.getString("passwd_md5",
-                null);
-        ConfigureInfo.Account.email = preferences.getString("email", null);
-        ConfigureInfo.Account.permission = preferences.getInt("permission",
-                ConfigureInfo.Account.Permission.normal);
-    }
-
-    /**
-     * 更新配置信息
-     */
-    private void updatePreferences() {
-        preferences.edit().putBoolean("isLogin", ConfigureInfo.Account.isLogin)
-                .commit();
-        preferences.edit()
-                .putString("username", ConfigureInfo.Account.username).commit();
-        preferences.edit()
-                .putString("passwd_md5", ConfigureInfo.Account.passwd_md5)
-                .commit();
-        preferences.edit().putString("email", ConfigureInfo.Account.email)
-                .commit();
-        preferences.edit()
-                .putInt("permission", ConfigureInfo.Account.permission)
-                .commit();
     }
 }

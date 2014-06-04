@@ -22,9 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.app.ConfigureInfo;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.app.Tools;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer;
 import com.qgymib.findthetoiletclient.service.NetworkService;
 
@@ -316,16 +316,16 @@ public class SignupFragment extends Fragment {
                         switch (result) {
 
                         // 用户名已存在
-                        case ConfigureInfo.Account.Errno.username_taken:
+                        case ConfigData.Account.Errno.username_taken:
                             warnningInfo = getString(R.string.error_username_taken);
                             break;
 
                         // 网络连接异常
-                        case ConfigureInfo.Account.Errno.connection_error:
+                        case ConfigData.Account.Errno.connection_error:
                             warnningInfo = getString(R.string.error_connection);
                             break;
 
-                        case ConfigureInfo.Account.Errno.unknown:
+                        case ConfigData.Account.Errno.unknown:
                         default:
                             warnningInfo = getString(R.string.error_unknow);
                             break;
@@ -337,9 +337,9 @@ public class SignupFragment extends Fragment {
                                 Toast.LENGTH_LONG).show();
                     }
                 } catch (InterruptedException e) {
-                    Log.e(ConfigureInfo.Common.tag,
+                    Log.e(ConfigData.Common.tag,
                             "signup asynctask was interrupted");
-                    result = ConfigureInfo.Account.Errno.unknown;
+                    result = ConfigData.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -347,9 +347,9 @@ public class SignupFragment extends Fragment {
                             Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 } catch (ExecutionException e) {
-                    Log.e(ConfigureInfo.Common.tag,
+                    Log.e(ConfigData.Common.tag,
                             "signup asynctask executed failed");
-                    result = ConfigureInfo.Account.Errno.unknown;
+                    result = ConfigData.Account.Errno.unknown;
                     Toast.makeText(
                             getParentFragment().getActivity()
                                     .getApplicationContext(),
@@ -361,7 +361,7 @@ public class SignupFragment extends Fragment {
                 // 若注册成功，则跳转到InfoFragment
                 if (result >= 0) {
                     // 注册用户权限
-                    ConfigureInfo.Account.permission = result;
+                    ConfigData.Account.permission = result;
                     // 跳转至InfoFragment
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
@@ -400,7 +400,7 @@ public class SignupFragment extends Fragment {
      */
     private void checkUsername() {
         username = usernameTextView.getText().toString();
-        Matcher matcher = Pattern.compile(ConfigureInfo.Regex.username)
+        Matcher matcher = Pattern.compile(ConfigData.Regex.username)
                 .matcher(username);
 
         if (matcher.find()) {
@@ -420,7 +420,7 @@ public class SignupFragment extends Fragment {
      */
     private void checkEmail() {
         email = emailTextView.getText().toString();
-        Pattern pattern = Pattern.compile(ConfigureInfo.Regex.email);
+        Pattern pattern = Pattern.compile(ConfigData.Regex.email);
         Matcher matcher = pattern.matcher(email);
 
         if (matcher.find()) {
@@ -440,7 +440,7 @@ public class SignupFragment extends Fragment {
      */
     private void checkPasswd() {
         String passwd = passwdTextView.getText().toString();
-        Matcher matcher = Pattern.compile(ConfigureInfo.Regex.passwd).matcher(
+        Matcher matcher = Pattern.compile(ConfigData.Regex.passwd).matcher(
                 passwd);
 
         if (matcher.find()) {

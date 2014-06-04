@@ -2,26 +2,42 @@ package com.qgymib.findthetoiletclient.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.service.NetworkService;
 
 public class FTTApplication extends Application {
 
     private static FTTApplication mInstance = null;
 
+    /**
+     * 百度地图管理
+     */
     public BMapManager bMapManager = null;
+    /**
+     * LBS密钥有效性
+     */
     public boolean m_bKeyRight = true;
-
+    /**
+     * 网络线程模块
+     */
     private NetworkService networkService = null;
+    /**
+     * 配置管理
+     */
+    public SharedPreferences preferences = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        preferences  = getSharedPreferences(
+                ConfigData.Common.preferences, MODE_PRIVATE);
     }
     
     /**

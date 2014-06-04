@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
+import com.qgymib.findthetoiletclient.data.ConfigData;
+
 import android.util.Log;
 
 /**
@@ -46,7 +48,7 @@ public class Tools {
             }
             hexResult = new String(str);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(ConfigureInfo.Common.tag, "Tools:getMD5() 无此运算法则");
+            Log.e(ConfigData.Common.tag, "Tools:getMD5() 无此运算法则");
             e.printStackTrace();
         }
 
