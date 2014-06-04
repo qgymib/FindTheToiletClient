@@ -23,7 +23,11 @@ public class DataBaseManager {
     }
 
     /**
-     * 插入城市编码以及对应的洗手间地理信息
+     * 智能插入/修改城市编码以及对应的洗手间地理信息。<br/>
+     * 当locationKey不存在时，插入对应信息<br/>
+     * 当locationKey存在时，拥有如下行为：<br/>
+     * * remoteVersion > localVersion - 更新数据库<br/>
+     * * remoteVersion <= localVersion - 无动作
      * 
      * @param locationKey
      *            城市编码
@@ -32,16 +36,30 @@ public class DataBaseManager {
      * @param locationValueSet
      *            洗手间信息集
      */
-    public void insertLocationSet(String locationKey, int locationVersion,
+    public void insertLocationSet(String locationKey, long locationVersion,
             String locationValueSet) {
+        LocationInfo info = getLocationSet(locationKey);
         SQLiteDatabase db = dbh.getWritableDatabase();
 
-        ContentValues cv = new ContentValues();
-        cv.put("location_key", locationKey);
-        cv.put("version", locationVersion);
-        cv.put("value", locationValueSet);
+        if (info == null) {
+            // 本地信息不存在
 
-        db.insert(ConfigData.Database.table_name, null, cv);
+            ContentValues cv = new ContentValues();
+            cv.put("location_key", locationKey);
+            cv.put("version", locationVersion);
+            cv.put("value", locationValueSet);
+
+            db.insert(ConfigData.Database.table_name, null, cv);
+        } else if (locationVersion > info.version) {
+            // 本地信息版本过低
+
+            ContentValues cv = new ContentValues();
+            cv.put("version", locationVersion);
+            cv.put("value", locationValueSet);
+
+            db.update(ConfigData.Database.table_name, cv, "location_key = ?",
+                    new String[] { locationKey });
+        }
     }
 
     /**
@@ -53,9 +71,8 @@ public class DataBaseManager {
      *         null - 若查询失败
      */
     public LocationInfo getLocationSet(String locationKey) {
-        LocationInfo info = new LocationInfo();
+        LocationInfo info = null;
 
-        // TODO 完成取得对应城市的厕所列表功能
         SQLiteDatabase db = dbh.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT version, value FROM "
@@ -63,6 +80,7 @@ public class DataBaseManager {
                 new String[] { locationKey });
 
         if (cursor.moveToNext()) {
+            info = new LocationInfo();
             info.version = cursor.getLong(0);
             info.value = cursor.getString(1);
         }

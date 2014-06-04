@@ -36,38 +36,39 @@ public class FTTApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        preferences  = getSharedPreferences(
-                ConfigData.Common.preferences, MODE_PRIVATE);
+        preferences = getSharedPreferences(ConfigData.Common.preferences,
+                MODE_PRIVATE);
     }
-    
+
     /**
      * 初始化网络线程模块
      */
-    public void initNetworkService(){
-        if(networkService == null){
+    public void initNetworkService() {
+        if (networkService == null) {
             networkService = new NetworkService();
             networkService.init();
         }
     }
-    
+
     /**
      * 取得网络服务的引用
+     * 
      * @return
      */
-    public NetworkService getNetworkService(){
+    public NetworkService getNetworkService() {
         return networkService;
     }
 
     /**
      * 终止网络线程模块
      */
-    public void shutdownNetworkSerivce(){
-        if(networkService != null){
+    public void shutdownNetworkSerivce() {
+        if (networkService != null) {
             networkService.shutdown();
             networkService = null;
         }
     }
-    
+
     public void initEngineManager(Context context) {
         if (bMapManager == null) {
             bMapManager = new BMapManager(context);
@@ -80,6 +81,11 @@ public class FTTApplication extends Application {
         }
     }
 
+    /**
+     * 取得应用实例以便在程序任意位置取得context
+     * 
+     * @return
+     */
     public static FTTApplication getInstance() {
         return mInstance;
     }

@@ -335,6 +335,14 @@ public final class ConfigData {
          * 数据包损坏或丢失，请求重新发送数据包
          */
         public static final int LOST = 0x07;
+        /**
+         * 搜索结果-数据版本
+         */
+        public static final int SEARCH_VERSION = 0x08;
+        /**
+         * 搜索结果-数据信息
+         */
+        public static final int SEARCH_VALUE = 0x09;
     }
 
     /**
@@ -347,7 +355,7 @@ public final class ConfigData {
         /**
          * 校验报文。
          */
-        public static final String parcel = "^0x0[0-7][\\d\\w_\\-]*_CRC32:[a-fA-F\\d]{1,}$";
+        public static final String parcel = "^0x0[0-9][\\d\\w_\\-]*_CRC32:[a-fA-F\\d]{1,}$";
         /**
          * 校验用户名。用户名由字母、数字、下划线组成，长度至少为6个字符。
          */

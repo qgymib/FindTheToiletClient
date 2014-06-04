@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
+import com.baidu.mapapi.utils.DistanceUtil;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.qgymib.findthetoiletclient.data.ConfigData;
 
 import android.util.Log;
@@ -72,4 +74,44 @@ public class Tools {
         return hexResult;
     }
 
+    /**
+     * 取得两点之间的距离
+     * 
+     * @param p1
+     * @param p2
+     * @return
+     */
+    public static double getDistance(GeoPoint p1, GeoPoint p2) {
+        return DistanceUtil.getDistance(p1, p2);
+    }
+
+    /**
+     * 取得两点之间的距离
+     * 
+     * @param latitude1E6
+     * @param longitude1E6
+     * @param latitude2E6
+     * @param longitude2E6
+     * @return
+     */
+    public static double getDistance(int latitude1E6, int longitude1E6,
+            int latitude2E6, int longitude2E6) {
+        return getDistance(new GeoPoint(latitude1E6, longitude1E6),
+                new GeoPoint(latitude2E6, longitude2E6));
+    }
+
+    /**
+     * 取得两点之间的距离
+     * 
+     * @param latitude1
+     * @param longitude1
+     * @param latitude2
+     * @param longitude2
+     * @return
+     */
+    public static double getDistance(double latitude1, double longitude1,
+            double latitude2, double longitude2) {
+        return getDistance((int) (latitude1 * 1E6), (int) (longitude1 * 1E6),
+                (int) (latitude2 * 1E6), (int) (longitude2 * 1E6));
+    }
 }

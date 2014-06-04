@@ -12,8 +12,11 @@ import java.util.regex.Pattern;
 
 import android.util.Log;
 
+import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.app.Tools;
 import com.qgymib.findthetoiletclient.data.ConfigData;
+import com.qgymib.findthetoiletclient.data.DataBaseManager;
+import com.qgymib.findthetoiletclient.data.DataTransfer.LocationInfo;
 
 public class NetworkTaskManager {
 
@@ -57,8 +60,7 @@ public class NetworkTaskManager {
         // 初始化writer
         Log.d(ConfigData.Common.tag, "init writer");
         writer = new PrintWriter(new OutputStreamWriter(
-                clientSocket.getOutputStream(), ConfigData.Net.encoding),
-                false);
+                clientSocket.getOutputStream(), ConfigData.Net.encoding), false);
         Log.d(ConfigData.Common.tag, "init writer finished");
         // 初始化reader
         Log.d(ConfigData.Common.tag, "init reader");
@@ -286,8 +288,7 @@ public class NetworkTaskManager {
                 boolean isFinished = false;
 
                 // 向服务器请求验证用户
-                sendMessage(ConfigData.MessageType.LOGIN, username,
-                        passwd_md5);
+                sendMessage(ConfigData.MessageType.LOGIN, username, passwd_md5);
 
                 // 在任务未完成的情况下，线程需保持运行
                 while (!isFinished) {
@@ -381,8 +382,7 @@ public class NetworkTaskManager {
                 boolean isFinished = false;
 
                 // 向服务器请求注册用户
-                sendMessage(ConfigData.MessageType.SIGNUP, username,
-                        passwd_md5);
+                sendMessage(ConfigData.MessageType.SIGNUP, username, passwd_md5);
 
                 while (!isFinished) {
                     // 接收有效信息
@@ -393,7 +393,7 @@ public class NetworkTaskManager {
 
                     // 注册结果
                     case ConfigData.MessageType.SIGNUP:
-                        actionForSignup();
+                        result = actionForSignup();
                         break;
 
                     // 数据包损坏或丢失，请求重新发送
@@ -430,6 +430,148 @@ public class NetworkTaskManager {
 
             // 返回处理结果
             return Integer.parseInt(getMessageList()[0]);
+        }
+
+    }
+
+    /**
+     * 搜索任务
+     * 
+     * @author qgymib
+     *
+     */
+    public class SearchTask implements Callable<String> {
+
+        private String locationKey = null;
+        private DataBaseManager dbm = null;
+        private long remoteVersion = 0;
+
+        /**
+         * 构建一个任务，向服务器请求一个城市的所有洗手间信息。
+         * 此任务将向服务器发送请求，并在本地数据库中查找此信息以及版本。若服务器返回的信息版本与本地信息相同
+         * ，则直接返回本地信息，否则返回服务器信息并更新本地数据库。
+         * 
+         * @param locationKey
+         */
+        public SearchTask(String locationKey) {
+            this.locationKey = locationKey;
+            dbm = new DataBaseManager(FTTApplication.getInstance());
+        }
+
+        @Override
+        public String call() {
+            String result = null;
+
+            try {
+                // 初始化任务所需资源
+                initTask();
+
+                // 标记任务是否完成
+                boolean isFinished = false;
+
+                // 向服务器请求搜索洗手间信息
+                sendMessage(ConfigData.MessageType.SEARCH, locationKey);
+
+                while (!isFinished) {
+                    // 接收有效信息
+                    getVaildMessage();
+
+                    // 当请求注册用户时，可能发生的事件为
+                    switch (getTaskType()) {
+                    // 返回信息版本
+                    case ConfigData.MessageType.SEARCH_VERSION:
+                        result = actionForVersion();
+                        break;
+
+                    // 返回信息内容
+                    case ConfigData.MessageType.SEARCH_VALUE:
+                        if (result == null) {
+                            // 当结果集为null时，说明需要接受服务器返回的信息集
+                            result = actionForValue();
+                        }
+                        break;
+
+                    // 数据包损坏或丢失，请求重新发送
+                    case ConfigData.MessageType.LOST:
+                        sendCachedMessage();
+                        break;
+
+                    // 服务器确认连接可以关闭
+                    case ConfigData.MessageType.FIN:
+                        // 标记任务已经结束
+                        isFinished = true;
+                        break;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                // 关闭端口
+                purgeTask();
+            }
+
+            return result;
+        }
+
+        /**
+         * 地理信息版本处理
+         * 
+         * @return 地理信息集<br/>
+         *         null - 若本地不存在地理信息或信息版本低于服务器版本
+         */
+        private String actionForVersion() {
+            String result = null;
+
+            // 远程服务器地理信息版本
+            remoteVersion = Long.parseLong(getMessageList()[0]);
+
+            // 取得本地洗手间地理信息
+            LocationInfo localInfo = dbm.getLocationSet(locationKey);
+
+            // 若无本地信息，则等待服务器信息
+            if (localInfo == null) {
+                return null;
+            }
+
+            // 本地地理信息版本
+            long localVersion = localInfo.version;
+
+            if (remoteVersion <= localVersion) {
+                // 远程地理信息版本小于等于本地信息版本，则直接返回本地版本
+                result = localInfo.value;
+
+                // 交互事件处理完成，客户端请求关闭连接
+                sendMessage(ConfigData.MessageType.FIN);
+            }
+
+            return result;
+        }
+
+        /**
+         * 地理信息集处理
+         * 
+         * @return
+         */
+        private String actionForValue() {
+            String result = "";
+            String[] locationList = getMessageList();
+
+            // 拼接结果集
+            for (int i = 0; i < locationList.length; i++) {
+                result += locationList[i] + "_";
+            }
+
+            // 去除末尾符号
+            result = result.substring(0, result.length() - 1);
+
+            // 交互事件处理完成，客户端请求关闭连接
+            sendMessage(ConfigData.MessageType.FIN);
+
+            // 更新数据库
+            dbm.insertLocationSet(locationKey, remoteVersion, result);
+
+            return result;
         }
 
     }

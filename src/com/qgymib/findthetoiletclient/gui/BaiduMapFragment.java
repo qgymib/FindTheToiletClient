@@ -279,7 +279,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
             @Override
             public void onGetAddrResult(MKAddrInfo result, int iError) {
-                // TODO 地理位置反编码
                 if (iError != 0) {
                     return;
                 }
