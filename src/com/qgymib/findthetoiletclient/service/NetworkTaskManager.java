@@ -480,7 +480,10 @@ public class NetworkTaskManager {
                     switch (getTaskType()) {
                     // 返回信息版本
                     case ConfigData.MessageType.SEARCH_VERSION:
-                        result = actionForVersion();
+                        if (result == null) {
+                            // 当结果集为null时，说明需要接受服务器返回的版本信息
+                            result = actionForVersion();
+                        }
                         break;
 
                     // 返回信息内容
