@@ -113,8 +113,7 @@ public class NetworkService {
                         passwd_md5));
 
         try {
-            result = future.get(
-                    ConfigData.Common.maximum_task_execution_time,
+            result = future.get(ConfigData.Common.maximum_task_execution_time,
                     TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // 任务中断
@@ -137,5 +136,27 @@ public class NetworkService {
 
         return result;
     }
-    
+
+    /**
+     * 请求搜索地点
+     * 
+     * @param locationKey
+     * @return 地理集合<br/>
+     *         null - 若搜索失败
+     */
+    public String requrestSearch(String locationKey) {
+        String result = null;
+
+        Future<String> future = taskThreadPool
+                .submit(new NetworkTaskManager().new SearchTask(locationKey));
+
+        try {
+            result = future.get(ConfigData.Common.maximum_task_execution_time,
+                    TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            Log.w(ConfigData.Common.tag, "search task failed");
+        }
+
+        return result;
+    }
 }

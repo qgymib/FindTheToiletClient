@@ -48,7 +48,10 @@ public final class ConfigData {
      *
      */
     public static final class Custom {
-
+        /**
+         * 地图中洗手间最多显示个数
+         */
+        public static int max_show_toilet_num = 5;
     }
 
     /**

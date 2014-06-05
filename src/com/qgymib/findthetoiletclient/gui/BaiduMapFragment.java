@@ -1,11 +1,16 @@
 package com.qgymib.findthetoiletclient.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKMapStatus;
 import com.baidu.mapapi.map.MKMapStatusChangeListener;
@@ -25,6 +31,7 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.search.MKAddrInfo;
 import com.baidu.mapapi.search.MKBusLineResult;
 import com.baidu.mapapi.search.MKDrivingRouteResult;
@@ -39,8 +46,10 @@ import com.baidu.mapapi.search.MKWalkingRouteResult;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.qgymib.findthetoiletclient.R;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.app.Tools;
 import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.service.NetworkService;
 
 public class BaiduMapFragment extends Fragment implements LocationTransfer {
     public static final String fragmentTag = "baidumap";
@@ -93,6 +102,26 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
      * 标记是否接受到了定位信息
      */
     private boolean hasLocationData = false;
+    /**
+     * 最后一次取得的城市地点。用于避免重复获取城市洗手间数据
+     */
+    private String lastGetCity = null;
+    /**
+     * 洗手间列表，需要进行排序
+     */
+    private List<LocationSet> toiletList = new ArrayList<LocationSet>();
+    /**
+     * 洗手间位置覆盖物
+     */
+    private MapOverlay overlay = null;
+    /**
+     * 洗手间覆盖物资源引用
+     */
+    private int[] icon_mark_resources = { R.drawable.icon_marka,
+            R.drawable.icon_markb, R.drawable.icon_markc,
+            R.drawable.icon_markd, R.drawable.icon_marke,
+            R.drawable.icon_markf, R.drawable.icon_markg,
+            R.drawable.icon_markh, R.drawable.icon_marki, R.drawable.icon_markj };
 
     public BaiduMapFragment() {
     }
@@ -289,6 +318,12 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                     PackagedInfo.City = mkac.city;
                 }
 
+                // 仅当城市信息不为空且城市信息变动时才向服务器提交搜索请求
+                if (PackagedInfo.City != null
+                        && (PackagedInfo.City).equals(lastGetCity)) {
+                    new SearchTask().execute(Tools.getCRC32(PackagedInfo.City));
+                }
+
                 // 显示调试信息
                 showDebugInfo();
             }
@@ -385,14 +420,11 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
         }
 
         // 更新调试信息
-        PackagedInfo.Code = infoBundle
-                .getInt(ConfigData.Location.Key.loc_type);
+        PackagedInfo.Code = infoBundle.getInt(ConfigData.Location.Key.loc_type);
         PackagedInfo.isValid = infoBundle
                 .getBoolean(ConfigData.Location.Key.isValid);
-        PackagedInfo.Type = infoBundle
-                .getString(ConfigData.Location.Key.type);
-        PackagedInfo.Time = infoBundle
-                .getString(ConfigData.Location.Key.time);
+        PackagedInfo.Type = infoBundle.getString(ConfigData.Location.Key.type);
+        PackagedInfo.Time = infoBundle.getString(ConfigData.Location.Key.time);
         PackagedInfo.Longitude = infoBundle
                 .getDouble(ConfigData.Location.Key.longitude);
         PackagedInfo.Latitude = infoBundle
@@ -461,6 +493,14 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
     }
 
+    private class MapOverlay extends ItemizedOverlay<OverlayItem> {
+
+        public MapOverlay(Drawable defaultMarker, MapView mapView) {
+            super(defaultMarker, mapView);
+            // TODO Auto-generated constructor stub
+        }
+    }
+
     /**
      * 用于包裹定位信息
      * 
@@ -516,6 +556,121 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
          * 中心点地理坐标
          */
         public static GeoPoint Center = null;
+    }
+
+    /**
+     * 地点信息集
+     * 
+     * @author qgymib
+     *
+     */
+    private class LocationSet implements Comparable<LocationSet> {
+        private GeoPoint point = null;
+        private Double distance = 0.0;
+
+        public LocationSet(int latitudeE6, int longitudeE6, double distance) {
+            setPoint(latitudeE6, longitudeE6);
+            setDistance(distance);
+        }
+
+        public GeoPoint getPoint() {
+            return point;
+        }
+
+        public LocationSet setPoint(int latitudeE6, int longitudeE6) {
+            this.point = new GeoPoint(latitudeE6, longitudeE6);
+            return this;
+        }
+
+        public Double getDistance() {
+            return distance;
+        }
+
+        public LocationSet setDistance(Double distance) {
+            this.distance = distance;
+            return this;
+        }
+
+        @Override
+        public int compareTo(LocationSet another) {
+            return getDistance().compareTo(another.getDistance());
+        }
+
+    }
+
+    /**
+     * 专属搜索任务
+     * 
+     * @author qgymib
+     *
+     */
+    private class SearchTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            // 取得网络服务
+            FTTApplication app = (FTTApplication) (getActivity()
+                    .getApplication());
+            NetworkService networkService = app.getNetworkService();
+
+            return networkService.requrestSearch(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null) {
+                // 查找失败
+            } else {
+                // 分割地点
+                String[] locationList = result.split("_");
+                if (!toiletList.isEmpty()) {
+                    // 若列表非空则清空列表
+                    toiletList.clear();
+                }
+
+                for (int i = 0; i < locationList.length; i++) {
+                    String[] coordinate = locationList[i].split(":");
+                    // 分离纬度
+                    int latitudeE6 = Integer.parseInt(coordinate[0]);
+                    // 分离经度
+                    int longitudeE6 = Integer.parseInt(coordinate[1]);
+
+                    toiletList.add(new LocationSet(latitudeE6, longitudeE6,
+                            Tools.getDistance(latitudeE6, longitudeE6,
+                                    (int) (PackagedInfo.Latitude * 1E6),
+                                    (int) (PackagedInfo.Longitude * 1E6))));
+                }
+
+                // 对列表进行排序
+                Collections.sort(toiletList);
+            }
+
+            if (overlay == null) {
+                overlay = new MapOverlay(getResources().getDrawable(
+                        R.drawable.icon_gcoding), mapView);
+            } else {
+                overlay.removeAll();
+            }
+
+            for (int i = 0; i < toiletList.size()
+                    && i < ConfigData.Custom.max_show_toilet_num; i++) {
+                OverlayItem item = new OverlayItem(
+                        toiletList.get(i).getPoint(), "" + i, "");
+                item.setMarker(getResources().getDrawable(
+                        icon_mark_resources[i]));
+                overlay.addItem(item);
+            }
+
+            mapView.getOverlays().add(overlay);
+            mapView.refresh();
+        }
     }
 
 }
