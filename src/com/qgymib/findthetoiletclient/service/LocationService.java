@@ -93,7 +93,6 @@ public class LocationService extends Service {
          */
         @Override
         public void onReceiveLocation(BDLocation location) {
-            Log.i(ConfigData.Common.tag, "location info received");
 
             // 若结果为空，则不作处理
             if (location == null) {
@@ -157,12 +156,9 @@ public class LocationService extends Service {
             locationInfoBundle.putString(ConfigData.Location.Key.time,
                     location.getTime());
 
-            Log.i(ConfigData.Common.tag, "location info packaged");
-
             // 定位有效或者需要强制执行时，执行回调函数
             if (locationInfoBundle
                     .getBoolean(ConfigData.Location.Key.isValid) || isForced) {
-                Log.i(ConfigData.Common.tag, "location info sended");
                 mLocationTransfer.transAction(locationInfoBundle);
             }
         }
