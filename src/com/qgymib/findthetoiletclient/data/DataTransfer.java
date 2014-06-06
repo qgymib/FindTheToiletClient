@@ -53,6 +53,20 @@ public class DataTransfer {
     }
 
     /**
+     * 为NavigationDrawerFragment与MainActivity以及BaiduMapFragment设计的接口。
+     * 此接口用于告诉百度地图不用等待精确定位，立即导航。
+     * 
+     * @author qgymib
+     *
+     */
+    public static interface NavigationTransfer {
+        /**
+         * NavigationDrawerFragment通过MainActivity中转告诉BaiduMapFragment立即定位。
+         */
+        public void navigationTransAction();
+    }
+
+    /**
      * 城市洗手间信息封装
      * 
      * @author qgymib
