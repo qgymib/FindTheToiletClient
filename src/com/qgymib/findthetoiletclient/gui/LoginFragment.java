@@ -236,6 +236,8 @@ public class LoginFragment extends Fragment {
 
             // 若登录成功，则跳转到InfoFragment
             if (result >= 0) {
+                // 设置用户名
+                ConfigData.Account.username = username;
                 // 设置用户权限
                 ConfigData.Account.permission = result;
                 // 通知父fragment跳转
