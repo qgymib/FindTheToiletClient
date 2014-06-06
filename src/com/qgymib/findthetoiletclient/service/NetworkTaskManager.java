@@ -508,7 +508,11 @@ public class NetworkTaskManager {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                // 网路异常时，直接取得本地信息
+                LocationInfo localInfo = dbm.getLocationSet(locationKey);
+                if(localInfo != null){
+                    result = localInfo.value;
+                }
             } finally {
                 // 关闭端口
                 purgeTask();
@@ -528,9 +532,9 @@ public class NetworkTaskManager {
 
             // 远程服务器地理信息版本
             remoteVersion = Long.parseLong(getMessageList()[0]);
-            
-            //若远程服务器信息版本小于0，则不存在地理信息
-            if(remoteVersion <= 0){
+
+            // 若远程服务器信息版本小于0，则不存在地理信息
+            if (remoteVersion <= 0) {
                 return null;
             }
 
@@ -564,8 +568,8 @@ public class NetworkTaskManager {
         private String actionForValue() {
             String result = "";
             String[] locationList = getMessageList();
-            
-            if(locationList[0].equals("")){
+
+            if (locationList[0].equals("")) {
                 return null;
             }
 
