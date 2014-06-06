@@ -7,6 +7,7 @@ import com.qgymib.findthetoiletclient.R.layout;
 import com.qgymib.findthetoiletclient.R.menu;
 import com.qgymib.findthetoiletclient.R.string;
 import com.qgymib.findthetoiletclient.data.ConfigData;
+import com.qgymib.findthetoiletclient.data.DataTransfer.NavigationTransfer;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -298,9 +299,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_lead_me) {
-            // TODO 立即导航
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT)
-                    .show();
+            ((NavigationTransfer)getActivity()).navigationTransAction();
             return true;
         }
 

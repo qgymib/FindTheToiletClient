@@ -5,8 +5,8 @@
     tools:context="com.qgymib.findthetoiletclient.MainActivity" >
 
     <item
-        android:id="@+id/action_example"
-        android:title="@string/action_example"
+        android:id="@+id/action_lead_me"
+        android:title="@string/lead_me_now"
         app:showAsAction="withText|ifRoom"/>
     <item
         android:id="@+id/action_settings"

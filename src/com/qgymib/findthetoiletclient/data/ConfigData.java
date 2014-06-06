@@ -20,8 +20,10 @@ public final class ConfigData {
         ConfigData.Account.passwd_md5 = preferences.getString("passwd_md5",
                 null);
         ConfigData.Account.email = preferences.getString("email", null);
+        // TODO 功能完成时，需将权限改为normal
         ConfigData.Account.permission = preferences.getInt("permission",
-                ConfigData.Account.Permission.normal);
+                ConfigData.Account.Permission.developer);
+        ConfigData.Cache.city = preferences.getString("cache_city", null);
     }
 
     /**
@@ -39,6 +41,7 @@ public final class ConfigData {
                 .commit();
         preferences.edit().putInt("permission", ConfigData.Account.permission)
                 .commit();
+        preferences.edit().putString("cache_city", ConfigData.Cache.city);
     }
 
     /**
@@ -257,6 +260,19 @@ public final class ConfigData {
     }
 
     /**
+     * 缓存信息
+     * 
+     * @author qgymib
+     *
+     */
+    public static final class Cache {
+        /**
+         * 缓存城市
+         */
+        public static String city = null;
+    }
+
+    /**
      * 百度地图相关参数
      * 
      * @author qgymib
@@ -276,7 +292,8 @@ public final class ConfigData {
         /**
          * 服务器地址
          */
-        public static final String server_address = "10.0.2.2";
+        // public static final String server_address = "10.0.2.2";
+        public static final String server_address = "192.168.2.237";
         /**
          * 服务器端口
          */
@@ -358,7 +375,7 @@ public final class ConfigData {
         /**
          * 校验报文。
          */
-        public static final String parcel = "^0x0[0-9][\\d\\w_\\-]*_CRC32:[a-fA-F\\d]{1,}$";
+        public static final String parcel = "^0x0[0-9][\\d\\w_\\-:]*_CRC32:[a-fA-F\\d]{1,}$";
         /**
          * 校验用户名。用户名由字母、数字、下划线组成，长度至少为6个字符。
          */

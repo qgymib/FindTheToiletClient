@@ -53,9 +53,11 @@ import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.app.Tools;
 import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.data.DataTransfer.NavigationTransfer;
 import com.qgymib.findthetoiletclient.service.NetworkService;
 
-public class BaiduMapFragment extends Fragment implements LocationTransfer {
+public class BaiduMapFragment extends Fragment implements LocationTransfer,
+        NavigationTransfer {
     public static final String fragmentTag = "baidumap";
 
     /**
@@ -344,6 +346,8 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                 if (result.type == MKAddrInfo.MK_REVERSEGEOCODE) {
                     MKGeocoderAddressComponent mkac = result.addressComponents;
                     PackagedInfo.City = mkac.city;
+                    // 更新缓存城市
+                    ConfigData.Cache.city = PackagedInfo.City;
                 }
 
                 // 仅当城市信息不为空且城市信息变动时才向服务器提交搜索请求
@@ -462,6 +466,78 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
         // 显示调试信息
         showDebugInfo();
+    }
+
+    @Override
+    public void navigationTransAction() {
+        // TODO 立即定位
+        if (ConfigData.Cache.city == null) {
+            Toast.makeText(getActivity(), getString(R.string.city_not_cached),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // 取得网络服务
+        FTTApplication app = (FTTApplication) (getActivity().getApplication());
+        NetworkService networkService = app.getNetworkService();
+
+        // 取得本地信息
+        String result = networkService.requrestSearch(ConfigData.Cache.city,
+                false);
+
+        String[] locationList = result.split("_");
+        if (!toiletList.isEmpty()) {
+            // 若列表非空则清空列表
+            toiletList.clear();
+        }
+
+        for (int i = 0; i < locationList.length; i++) {
+            String[] coordinate = locationList[i].split(":");
+            // 分离纬度
+            int latitudeE6 = Integer.parseInt(coordinate[0]);
+            // 分离经度
+            int longitudeE6 = Integer.parseInt(coordinate[1]);
+
+            Log.d(ConfigData.Common.tag, latitudeE6 + "-" + longitudeE6);
+
+            toiletList.add(new LocationSet(latitudeE6, longitudeE6, Tools
+                    .getDistance(latitudeE6, longitudeE6,
+                            (int) (PackagedInfo.Latitude * 1E6),
+                            (int) (PackagedInfo.Longitude * 1E6))));
+        }
+
+        Log.d(ConfigData.Common.tag, "信息数量：" + locationList.length);
+
+        if (mapOverlay == null) {
+            mapOverlay = new MapOverlay(getResources().getDrawable(
+                    R.drawable.icon_gcoding), mapView);
+        } else {
+            mapOverlay.removeAll();
+            mapView.refresh();
+        }
+
+        refreshDistance();
+
+        for (int i = 0; i < toiletList.size()
+                && i < ConfigData.Custom.max_show_toilet_num; i++) {
+            OverlayItem item = new OverlayItem(toiletList.get(i).getPoint(), ""
+                    + i, "");
+            item.setMarker(getResources().getDrawable(icon_mark_resources[i]));
+            mapOverlay.addItem(item);
+        }
+
+        // 显示洗手间位置
+        mapView.getOverlays().add(mapOverlay);
+        mapView.refresh();
+
+        // 默认发起对最近洗手间地点的路径规划
+        MKPlanNode stNode = new MKPlanNode();
+        stNode.pt = new GeoPoint((int) (PackagedInfo.Latitude * 1E6),
+                (int) (PackagedInfo.Longitude * 1E6));
+        MKPlanNode edNode = new MKPlanNode();
+        edNode.pt = toiletList.get(0).getPoint();
+        mSearch.walkingSearch(PackagedInfo.City, stNode, PackagedInfo.City,
+                edNode);
     }
 
     /**
@@ -661,7 +737,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                     .getApplication());
             NetworkService networkService = app.getNetworkService();
 
-            return networkService.requrestSearch(params[0]);
+            return networkService.requrestSearch(params[0], true);
         }
 
         @Override
@@ -696,6 +772,14 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                 }
 
                 Log.d(ConfigData.Common.tag, "信息数量：" + locationList.length);
+
+                if (mapOverlay == null) {
+                    mapOverlay = new MapOverlay(getResources().getDrawable(
+                            R.drawable.icon_gcoding), mapView);
+                } else {
+                    mapOverlay.removeAll();
+                    mapView.refresh();
+                }
 
                 Toast.makeText(getActivity(),
                         getString(R.string.waiting_for_gps), Toast.LENGTH_LONG)
@@ -740,14 +824,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
                     }
                 }).start();
-            }
-
-            if (mapOverlay == null) {
-                mapOverlay = new MapOverlay(getResources().getDrawable(
-                        R.drawable.icon_gcoding), mapView);
-            } else {
-                mapOverlay.removeAll();
-                mapView.refresh();
             }
 
         }

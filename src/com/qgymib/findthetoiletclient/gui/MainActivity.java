@@ -11,6 +11,7 @@ import com.qgymib.findthetoiletclient.R.string;
 import com.qgymib.findthetoiletclient.app.FTTApplication;
 import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.data.DataTransfer.NavigationTransfer;
 import com.qgymib.findthetoiletclient.gui.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.qgymib.findthetoiletclient.service.LocationService;
 import com.qgymib.findthetoiletclient.service.LocationService.LocationServiceBinder;
@@ -41,7 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements
-        NavigationDrawerFragment.NavigationDrawerCallbacks, LocationTransfer {
+        NavigationDrawerFragment.NavigationDrawerCallbacks, LocationTransfer, NavigationTransfer{
 
     /**
      * 储存所有fragment列表
@@ -265,6 +266,16 @@ public class MainActivity extends ActionBarActivity implements
             ((LocationTransfer) fragmentManager
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
                     .locationTransAction(locationInfoBundle);
+        }
+    }
+
+    @Override
+    public void navigationTransAction() {
+        if (fragmentManager != null) {
+            // 向BaiduMapFragment分发信息
+            ((NavigationTransfer) fragmentManager
+                    .findFragmentByTag(BaiduMapFragment.fragmentTag))
+                    .navigationTransAction();;
         }
     }
 }

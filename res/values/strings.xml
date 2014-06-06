@@ -34,5 +34,9 @@
     <string name="error_unknow">Unknow Error</string>
     <string name="local_vaild_for_login_failed">Username or Password incorrect. Please double check.</string>
     <string name="description_imageView_locate">this view is used to center the map where the user is.</string>
+    <string name="error_route_not_found">Sorry, we can\'t find any rout to the position.</string>
+    <string name="waiting_for_gps">Waiting for GPS remain stable</string>
+    <string name="lead_me_now">Lead Me Now !</string>
+    <string name="city_not_cached">City information does not exits, can not locate immediately.</string>
 
 </resources>
