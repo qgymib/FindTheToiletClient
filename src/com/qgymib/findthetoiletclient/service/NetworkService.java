@@ -141,14 +141,17 @@ public class NetworkService {
      * 请求搜索地点
      * 
      * @param locationKey
+     *            城市编码
+     * @param isNet
+     *            是否尝试与服务器交互
      * @return 地理集合<br/>
      *         null - 若搜索失败
      */
-    public String requrestSearch(String locationKey) {
+    public String requrestSearch(String locationKey, boolean isNet) {
         String result = null;
 
         Future<String> future = taskThreadPool
-                .submit(new NetworkTaskManager().new SearchTask(locationKey));
+                .submit(new NetworkTaskManager().new SearchTask(locationKey, isNet));
 
         try {
             result = future.get(ConfigData.Common.maximum_task_execution_time,

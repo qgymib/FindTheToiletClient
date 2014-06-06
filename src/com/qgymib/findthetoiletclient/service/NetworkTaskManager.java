@@ -445,6 +445,7 @@ public class NetworkTaskManager {
         private String locationKey = null;
         private DataBaseManager dbm = null;
         private long remoteVersion = 0;
+        private boolean isNet = true;
 
         /**
          * 构建一个任务，向服务器请求一个城市的所有洗手间信息。
@@ -453,14 +454,24 @@ public class NetworkTaskManager {
          * 
          * @param locationKey
          */
-        public SearchTask(String locationKey) {
+        public SearchTask(String locationKey, boolean isNet) {
             this.locationKey = locationKey;
             dbm = new DataBaseManager(FTTApplication.getInstance());
+            this.isNet = isNet;
         }
 
         @Override
         public String call() {
             String result = null;
+
+            // 若无需与服务器交互，则直接返回本地信息
+            if (!isNet) {
+                LocationInfo localInfo = dbm.getLocationSet(locationKey);
+                if (localInfo != null) {
+                    result = localInfo.value;
+                }
+                return result;
+            }
 
             try {
                 // 初始化任务所需资源
@@ -510,7 +521,7 @@ public class NetworkTaskManager {
             } catch (IOException e) {
                 // 网路异常时，直接取得本地信息
                 LocationInfo localInfo = dbm.getLocationSet(locationKey);
-                if(localInfo != null){
+                if (localInfo != null) {
                     result = localInfo.value;
                 }
             } finally {
