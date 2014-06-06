@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.data.ConfigData;
 import com.qgymib.findthetoiletclient.data.DataTransfer.ViewTransfer;
 
 /**
@@ -38,8 +39,11 @@ public class AccountFragment extends Fragment implements ViewTransfer {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        // 默认显示登录界面
-        viewTransAction(R.layout.fragment_account_login);
+        if (ConfigData.Account.isLogin) {
+            viewTransAction(R.layout.fragment_account_info);
+        } else {
+            viewTransAction(R.layout.fragment_account_login);
+        }
 
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
