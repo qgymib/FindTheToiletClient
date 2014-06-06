@@ -19,7 +19,6 @@ public final class ConfigData {
         ConfigData.Account.username = preferences.getString("username", null);
         ConfigData.Account.passwd_md5 = preferences.getString("passwd_md5",
                 null);
-        ConfigData.Account.email = preferences.getString("email", null);
         // TODO 功能完成时，需将权限改为normal
         ConfigData.Account.permission = preferences.getInt("permission",
                 ConfigData.Account.Permission.developer);
@@ -36,8 +35,6 @@ public final class ConfigData {
                 .commit();
         preferences.edit()
                 .putString("passwd_md5", ConfigData.Account.passwd_md5)
-                .commit();
-        preferences.edit().putString("email", ConfigData.Account.email)
                 .commit();
         preferences.edit().putInt("permission", ConfigData.Account.permission)
                 .commit();
@@ -103,10 +100,6 @@ public final class ConfigData {
          * 经md5加密的密码
          */
         public static String passwd_md5 = null;
-        /**
-         * 用户注册邮箱
-         */
-        public static String email = null;
         /**
          * 用户权限。默认为普通用户。
          */
