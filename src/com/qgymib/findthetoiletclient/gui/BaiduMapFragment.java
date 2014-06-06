@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -320,7 +321,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
                 // 仅当城市信息不为空且城市信息变动时才向服务器提交搜索请求
                 if (PackagedInfo.City != null
-                        && (PackagedInfo.City).equals(lastGetCity)) {
+                        && !(PackagedInfo.City).equals(lastGetCity)) {
                     new SearchTask().execute(Tools.getCRC32(PackagedInfo.City));
                 }
 
@@ -627,7 +628,9 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
             if (result == null) {
                 // 查找失败
+                Log.d(ConfigData.Common.tag, "洗手间信息集为空");
             } else {
+                Log.d(ConfigData.Common.tag, "洗手间信息集有效");
                 // 分割地点
                 String[] locationList = result.split("_");
                 if (!toiletList.isEmpty()) {
@@ -641,12 +644,16 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                     int latitudeE6 = Integer.parseInt(coordinate[0]);
                     // 分离经度
                     int longitudeE6 = Integer.parseInt(coordinate[1]);
+                    
+                    Log.d(ConfigData.Common.tag, latitudeE6 + "-" + longitudeE6);
 
                     toiletList.add(new LocationSet(latitudeE6, longitudeE6,
                             Tools.getDistance(latitudeE6, longitudeE6,
                                     (int) (PackagedInfo.Latitude * 1E6),
                                     (int) (PackagedInfo.Longitude * 1E6))));
                 }
+                
+                Log.d(ConfigData.Common.tag, "信息数量：" + locationList.length);
 
                 // 对列表进行排序
                 Collections.sort(toiletList);
@@ -657,6 +664,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                         R.drawable.icon_gcoding), mapView);
             } else {
                 overlay.removeAll();
+                mapView.refresh();
             }
 
             for (int i = 0; i < toiletList.size()

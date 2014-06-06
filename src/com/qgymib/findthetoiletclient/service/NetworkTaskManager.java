@@ -528,6 +528,11 @@ public class NetworkTaskManager {
 
             // 远程服务器地理信息版本
             remoteVersion = Long.parseLong(getMessageList()[0]);
+            
+            //若远程服务器信息版本小于0，则不存在地理信息
+            if(remoteVersion <= 0){
+                return null;
+            }
 
             // 取得本地洗手间地理信息
             LocationInfo localInfo = dbm.getLocationSet(locationKey);
@@ -559,6 +564,10 @@ public class NetworkTaskManager {
         private String actionForValue() {
             String result = "";
             String[] locationList = getMessageList();
+            
+            if(locationList[0].equals("")){
+                return null;
+            }
 
             // 拼接结果集
             for (int i = 0; i < locationList.length; i++) {
