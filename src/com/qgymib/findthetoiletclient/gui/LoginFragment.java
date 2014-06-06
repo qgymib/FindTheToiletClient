@@ -1,6 +1,5 @@
 package com.qgymib.findthetoiletclient.gui;
 
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,7 +7,6 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -101,83 +99,6 @@ public class LoginFragment extends Fragment {
                 LoginTask loginTask = new LoginTask();
                 loginTask.execute(username, passwd_md5);
 
-                // 用于储存验证结果
-                int result = 0;
-                try {
-                    // 取得验证结果
-                    result = loginTask.get();
-
-                    if (result >= 0) {
-                        // 提示登陆成功
-                        Toast.makeText(
-                                getParentFragment().getActivity()
-                                        .getApplicationContext(),
-                                getString(R.string.success_login),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        // 返回值小于0则登录错误。提示相应信息
-                        String warnningInfo = null;
-                        switch (result) {
-                        // 网络连接异常
-                        case ConfigData.Account.Errno.connection_error:
-                            warnningInfo = getString(R.string.error_connection);
-                            break;
-
-                        // 用户名不存在
-                        case ConfigData.Account.Errno.username_invalid:
-                            warnningInfo = getString(R.string.error_username_invalid);
-                            break;
-
-                        // 密码错误
-                        case ConfigData.Account.Errno.passwd_invalid:
-                            warnningInfo = getString(R.string.error_passwd_invalid);
-                            break;
-
-                        // 未知错误
-                        case ConfigData.Account.Errno.unknown:
-                            // 任何不在列表中的错误均为未知错误
-                        default:
-                            warnningInfo = getString(R.string.error_unknow);
-                            break;
-                        }
-                        Toast.makeText(
-                                getParentFragment().getActivity()
-                                        .getApplicationContext(), warnningInfo,
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (InterruptedException e) {
-                    Log.e(ConfigData.Common.tag,
-                            "login asynctask was interrupted");
-                    result = ConfigData.Account.Errno.unknown;
-                    Toast.makeText(
-                            getParentFragment().getActivity()
-                                    .getApplicationContext(),
-                            "login asynctask was interrupted",
-                            Toast.LENGTH_LONG).show();
-                } catch (ExecutionException e) {
-                    Log.e(ConfigData.Common.tag,
-                            "login asynctask executed failed");
-                    result = ConfigData.Account.Errno.unknown;
-                    Toast.makeText(
-                            getParentFragment().getActivity()
-                                    .getApplicationContext(),
-                            "login asynctask executed failed",
-                            Toast.LENGTH_LONG).show();
-                }
-
-                // 重新开启用户可编辑界面
-                setComponentEnabled(true);
-
-                // 若登录成功，则跳转到InfoFragment
-                if (result >= 0) {
-                    // 设置用户权限
-                    ConfigData.Account.permission = result;
-                    // 通知父fragment跳转
-                    AccountFragment accountFragment = (AccountFragment) getParentFragment();
-                    DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                    dt.viewTransAction(R.layout.fragment_account_info);
-                }
             }
         });
 
@@ -265,6 +186,63 @@ public class LoginFragment extends Fragment {
 
             // 取得验证结果
             return networkService.requestLogin(params[0], params[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+
+            if (result >= 0) {
+                // 提示登陆成功
+                Toast.makeText(
+                        getParentFragment().getActivity()
+                                .getApplicationContext(),
+                        getString(R.string.success_login), Toast.LENGTH_SHORT)
+                        .show();
+            } else {
+                // 返回值小于0则登录错误。提示相应信息
+                String warnningInfo = null;
+                switch (result) {
+                // 网络连接异常
+                case ConfigData.Account.Errno.connection_error:
+                    warnningInfo = getString(R.string.error_connection);
+                    break;
+
+                // 用户名不存在
+                case ConfigData.Account.Errno.username_invalid:
+                    warnningInfo = getString(R.string.error_username_invalid);
+                    break;
+
+                // 密码错误
+                case ConfigData.Account.Errno.passwd_invalid:
+                    warnningInfo = getString(R.string.error_passwd_invalid);
+                    break;
+
+                // 未知错误
+                case ConfigData.Account.Errno.unknown:
+                    // 任何不在列表中的错误均为未知错误
+                default:
+                    warnningInfo = getString(R.string.error_unknow);
+                    break;
+                }
+                Toast.makeText(
+                        getParentFragment().getActivity()
+                                .getApplicationContext(), warnningInfo,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            // 重新开启用户可编辑界面
+            setComponentEnabled(true);
+
+            // 若登录成功，则跳转到InfoFragment
+            if (result >= 0) {
+                // 设置用户权限
+                ConfigData.Account.permission = result;
+                // 通知父fragment跳转
+                AccountFragment accountFragment = (AccountFragment) getParentFragment();
+                DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
+                dt.viewTransAction(R.layout.fragment_account_info);
+            }
         }
 
     }
