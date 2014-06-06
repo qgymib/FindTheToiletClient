@@ -39,13 +39,13 @@ public class AccountFragment extends Fragment implements ViewTransfer {
             Bundle savedInstanceState) {
 
         // 默认显示登录界面
-        transAction(R.layout.fragment_account_login);
+        viewTransAction(R.layout.fragment_account_login);
 
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     @Override
-    public void transAction(int viewID) {
+    public void viewTransAction(int viewID) {
         FragmentManager fragmentManager = getChildFragmentManager();
         Fragment targetFragment = null;
         String tag = null;

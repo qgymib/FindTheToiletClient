@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKEvent;
 import com.baidu.mapapi.map.MKMapStatus;
 import com.baidu.mapapi.map.MKMapStatusChangeListener;
 import com.baidu.mapapi.map.MKMapViewListener;
@@ -33,10 +34,12 @@ import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.OverlayItem;
+import com.baidu.mapapi.map.RouteOverlay;
 import com.baidu.mapapi.search.MKAddrInfo;
 import com.baidu.mapapi.search.MKBusLineResult;
 import com.baidu.mapapi.search.MKDrivingRouteResult;
 import com.baidu.mapapi.search.MKGeocoderAddressComponent;
+import com.baidu.mapapi.search.MKPlanNode;
 import com.baidu.mapapi.search.MKPoiResult;
 import com.baidu.mapapi.search.MKSearch;
 import com.baidu.mapapi.search.MKSearchListener;
@@ -114,7 +117,11 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
     /**
      * 洗手间位置覆盖物
      */
-    private MapOverlay overlay = null;
+    private MapOverlay mapOverlay = null;
+    /**
+     * 导航图层
+     */
+    private RouteOverlay routeOverlay = null;
     /**
      * 洗手间覆盖物资源引用
      */
@@ -273,6 +280,26 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
             @Override
             public void onGetWalkingRouteResult(MKWalkingRouteResult result,
                     int iError) {
+                // 起点或终点有歧义
+                if (iError == MKEvent.ERROR_ROUTE_ADDR) {
+                    Log.w(ConfigData.Common.tag, "地点存在歧义");
+                    return;
+                }
+
+                // 路径未找到
+                if (iError != 0 || result == null) {
+                    Log.w(ConfigData.Common.tag, "路径未找到");
+                    Toast.makeText(getActivity(),
+                            getString(R.string.error_route_not_found),
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                routeOverlay = new RouteOverlay(getActivity(), mapView);
+                // 展示其中一项方案
+                routeOverlay.setData(result.getPlan(0).getRoute(0));
+                mapView.getOverlays().add(routeOverlay);
+                mapView.refresh();
             }
 
             @Override
@@ -385,7 +412,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
      *            定位信息的封装
      */
     @Override
-    public void transAction(Bundle infoBundle) {
+    public void locationTransAction(Bundle infoBundle) {
         // 若未完全初始化之前就接受到定位数据，则抛弃此次数据
         if (locationData == null) {
             return;
@@ -494,6 +521,21 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
     }
 
+    /**
+     * 刷新用户地点与最近洗手间位置距离
+     */
+    private void refreshDistance() {
+        for (int i = 0; i < toiletList.size(); i++) {
+            double distance = Tools.getDistance(toiletList.get(i).getPoint(),
+                    new GeoPoint((int) (PackagedInfo.Latitude * 1E6),
+                            (int) (PackagedInfo.Longitude * 1E6)));
+            toiletList.get(i).setDistance(distance);
+        }
+
+        // 对列表进行排序
+        Collections.sort(toiletList);
+    }
+
     private class MapOverlay extends ItemizedOverlay<OverlayItem> {
 
         public MapOverlay(Drawable defaultMarker, MapView mapView) {
@@ -594,7 +636,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
 
         @Override
         public int compareTo(LocationSet another) {
-            return getDistance().compareTo(another.getDistance());
+            return 0 - getDistance().compareTo(another.getDistance());
         }
 
     }
@@ -644,7 +686,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                     int latitudeE6 = Integer.parseInt(coordinate[0]);
                     // 分离经度
                     int longitudeE6 = Integer.parseInt(coordinate[1]);
-                    
+
                     Log.d(ConfigData.Common.tag, latitudeE6 + "-" + longitudeE6);
 
                     toiletList.add(new LocationSet(latitudeE6, longitudeE6,
@@ -652,32 +694,62 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer {
                                     (int) (PackagedInfo.Latitude * 1E6),
                                     (int) (PackagedInfo.Longitude * 1E6))));
                 }
-                
+
                 Log.d(ConfigData.Common.tag, "信息数量：" + locationList.length);
 
-                // 对列表进行排序
-                Collections.sort(toiletList);
+                Toast.makeText(getActivity(),
+                        getString(R.string.waiting_for_gps), Toast.LENGTH_LONG)
+                        .show();
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // 等待定位稳定
+
+                        try {
+                            Thread.sleep(10 * 1000);
+                        } catch (InterruptedException e) {
+                            Log.d(ConfigData.Common.tag, "等待定位稳定失败");
+                        } finally {
+
+                            refreshDistance();
+
+                            for (int i = 0; i < toiletList.size()
+                                    && i < ConfigData.Custom.max_show_toilet_num; i++) {
+                                OverlayItem item = new OverlayItem(toiletList
+                                        .get(i).getPoint(), "" + i, "");
+                                item.setMarker(getResources().getDrawable(
+                                        icon_mark_resources[i]));
+                                mapOverlay.addItem(item);
+                            }
+
+                            // 显示洗手间位置
+                            mapView.getOverlays().add(mapOverlay);
+                            mapView.refresh();
+
+                            // 默认发起对最近洗手间地点的路径规划
+                            MKPlanNode stNode = new MKPlanNode();
+                            stNode.pt = new GeoPoint(
+                                    (int) (PackagedInfo.Latitude * 1E6),
+                                    (int) (PackagedInfo.Longitude * 1E6));
+                            MKPlanNode edNode = new MKPlanNode();
+                            edNode.pt = toiletList.get(0).getPoint();
+                            mSearch.walkingSearch(PackagedInfo.City, stNode,
+                                    PackagedInfo.City, edNode);
+                        }
+
+                    }
+                }).start();
             }
 
-            if (overlay == null) {
-                overlay = new MapOverlay(getResources().getDrawable(
+            if (mapOverlay == null) {
+                mapOverlay = new MapOverlay(getResources().getDrawable(
                         R.drawable.icon_gcoding), mapView);
             } else {
-                overlay.removeAll();
+                mapOverlay.removeAll();
                 mapView.refresh();
             }
 
-            for (int i = 0; i < toiletList.size()
-                    && i < ConfigData.Custom.max_show_toilet_num; i++) {
-                OverlayItem item = new OverlayItem(
-                        toiletList.get(i).getPoint(), "" + i, "");
-                item.setMarker(getResources().getDrawable(
-                        icon_mark_resources[i]));
-                overlay.addItem(item);
-            }
-
-            mapView.getOverlays().add(overlay);
-            mapView.refresh();
         }
     }
 

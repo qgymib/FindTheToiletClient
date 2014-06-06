@@ -33,7 +33,7 @@ public class DataTransfer {
          * @param viewID
          *            R.layout.fragment_account_xxxx
          */
-        public void transAction(int viewID);
+        public void viewTransAction(int viewID);
     }
 
     /**
@@ -49,7 +49,7 @@ public class DataTransfer {
          * 
          * @param locationInfoBundle
          */
-        public void transAction(Bundle locationInfoBundle);
+        public void locationTransAction(Bundle locationInfoBundle);
     }
 
     /**

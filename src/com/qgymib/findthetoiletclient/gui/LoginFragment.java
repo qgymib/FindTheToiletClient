@@ -176,7 +176,7 @@ public class LoginFragment extends Fragment {
                     // 通知父fragment跳转
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                    dt.transAction(R.layout.fragment_account_info);
+                    dt.viewTransAction(R.layout.fragment_account_info);
                 }
             }
         });
@@ -191,7 +191,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 AccountFragment accountFragment = (AccountFragment) getParentFragment();
                 DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                dt.transAction(R.layout.fragment_account_signup);
+                dt.viewTransAction(R.layout.fragment_account_signup);
             }
         });
     }

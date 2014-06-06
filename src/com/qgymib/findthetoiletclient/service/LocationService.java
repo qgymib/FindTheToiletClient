@@ -159,7 +159,7 @@ public class LocationService extends Service {
             // 定位有效或者需要强制执行时，执行回调函数
             if (locationInfoBundle
                     .getBoolean(ConfigData.Location.Key.isValid) || isForced) {
-                mLocationTransfer.transAction(locationInfoBundle);
+                mLocationTransfer.locationTransAction(locationInfoBundle);
             }
         }
 

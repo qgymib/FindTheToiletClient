@@ -365,7 +365,7 @@ public class SignupFragment extends Fragment {
                     // 跳转至InfoFragment
                     AccountFragment accountFragment = (AccountFragment) getParentFragment();
                     DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                    dt.transAction(R.layout.fragment_account_info);
+                    dt.viewTransAction(R.layout.fragment_account_info);
                 }
             }
         });
@@ -380,7 +380,7 @@ public class SignupFragment extends Fragment {
             public void onClick(View v) {
                 AccountFragment accountFragment = (AccountFragment) getParentFragment();
                 DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                dt.transAction(R.layout.fragment_account_login);
+                dt.viewTransAction(R.layout.fragment_account_login);
             }
         });
     }

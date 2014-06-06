@@ -259,12 +259,12 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void transAction(Bundle locationInfoBundle) {
+    public void locationTransAction(Bundle locationInfoBundle) {
         if (fragmentManager != null) {
             // 向BaiduMapFragment分发信息
             ((LocationTransfer) fragmentManager
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
-                    .transAction(locationInfoBundle);
+                    .locationTransAction(locationInfoBundle);
         }
     }
 }
