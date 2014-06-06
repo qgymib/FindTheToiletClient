@@ -41,23 +41,19 @@ public class SignupFragment extends Fragment {
 
     private TextView infoTextView;
     private EditText usernameTextView;
-    private EditText emailTextView;
     private EditText passwdTextView;
     private EditText repeatPasswdTextView;
     private Button signupButton;
     private TextView changeViewToLoginTextView;
 
-    private String email = null;
     private String username = null;
     private String passwd_md5 = null;
 
     private boolean isUsernameVaild = false;
-    private boolean isEmailVaild = false;
     private boolean isPasswdVaild = false;
     private boolean isRepeatPasswdVaild = false;
 
     private boolean isFirstCheckUsername = true;
-    private boolean isFirstCheckEmail = true;
     private boolean isFirstCheckPasswd = true;
     private boolean isFirstCheckRepeatPasswd = true;
 
@@ -82,8 +78,6 @@ public class SignupFragment extends Fragment {
                 .findViewById(R.id.textView_signup_info);
         usernameTextView = (EditText) containView
                 .findViewById(R.id.editText_signup_username);
-        emailTextView = (EditText) containView
-                .findViewById(R.id.editText_signup_email);
         passwdTextView = (EditText) containView
                 .findViewById(R.id.editText_signup_passwd);
         repeatPasswdTextView = (EditText) containView
@@ -135,53 +129,6 @@ public class SignupFragment extends Fragment {
 
                     // 标记已经执行过首次校验
                     isFirstCheckUsername = false;
-
-                    // 重新设置注册按钮的可用性
-                    checkButtonClickable();
-                }
-            }
-        });
-
-        // 邮箱格式有效性检查
-        emailTextView.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                    int count) {
-                // do nothing
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                    int after) {
-                // do nothing
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // 仅当此文本框失去过一次焦点之后才进行实时校验
-                if (isFirstCheckEmail) {
-                    return;
-                }
-
-                // 校验邮箱
-                checkEmail();
-
-                // 重新设置注册按钮的可用性
-                checkButtonClickable();
-            }
-        });
-        emailTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                // 当第一次失去焦点时执行邮箱检查
-                if (!hasFocus && isFirstCheckEmail) {
-                    // 校验邮箱
-                    checkEmail();
-
-                    // 标记已经执行过首次校验
-                    isFirstCheckEmail = false;
 
                     // 重新设置注册按钮的可用性
                     checkButtonClickable();
@@ -389,10 +336,10 @@ public class SignupFragment extends Fragment {
      * 重新设置注册按钮的可用性，提示无效内容
      */
     private void checkButtonClickable() {
-        signupButton.setClickable(isUsernameVaild && isEmailVaild
-                && isPasswdVaild && isRepeatPasswdVaild);
-        signupButton.setEnabled(isUsernameVaild && isEmailVaild
-                && isPasswdVaild && isRepeatPasswdVaild);
+        signupButton.setClickable(isUsernameVaild && isPasswdVaild
+                && isRepeatPasswdVaild);
+        signupButton.setEnabled(isUsernameVaild && isPasswdVaild
+                && isRepeatPasswdVaild);
     }
 
     /**
@@ -400,8 +347,8 @@ public class SignupFragment extends Fragment {
      */
     private void checkUsername() {
         username = usernameTextView.getText().toString();
-        Matcher matcher = Pattern.compile(ConfigData.Regex.username)
-                .matcher(username);
+        Matcher matcher = Pattern.compile(ConfigData.Regex.username).matcher(
+                username);
 
         if (matcher.find()) {
             // 若用户名有效
@@ -412,26 +359,6 @@ public class SignupFragment extends Fragment {
             isUsernameVaild = false;
             infoTextView.setText(getResources().getString(
                     R.string.fragment_account_signup_username_invalid));
-        }
-    }
-
-    /**
-     * 校验邮箱
-     */
-    private void checkEmail() {
-        email = emailTextView.getText().toString();
-        Pattern pattern = Pattern.compile(ConfigData.Regex.email);
-        Matcher matcher = pattern.matcher(email);
-
-        if (matcher.find()) {
-            // email有效
-            infoTextView.setText(null);
-            isEmailVaild = true;
-        } else {
-            // email无效
-            infoTextView.setText(getResources().getString(
-                    R.string.fragment_account_signup_email_invalid));
-            isEmailVaild = false;
         }
     }
 

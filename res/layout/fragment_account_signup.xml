@@ -26,6 +26,7 @@
             <requestFocus />
         </EditText>
 
+        <!--
         <EditText
             android:id="@+id/editText_signup_email"
             android:layout_width="match_parent"
@@ -33,6 +34,7 @@
             android:ems="10"
             android:hint="@string/fragment_account_signup_hint_email"
             android:inputType="textEmailAddress" />
+        -->
 
         <EditText
             android:id="@+id/editText_signup_passwd"
@@ -61,8 +63,8 @@
         android:id="@+id/textView_changeViewToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="@string/fragment_account_change_view_to_login"
-        android:textSize="18sp"
-        android:gravity="center_horizontal" />
+        android:textSize="18sp" />
 
 </LinearLayout>
