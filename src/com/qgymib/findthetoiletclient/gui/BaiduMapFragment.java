@@ -250,7 +250,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
 
                     @Override
                     public void onClickMapPoi(MapPoi mapPoiInfo) {
-                        // TODO Auto-generated method stub
                         String title = "";
                         if (mapPoiInfo != null) {
                             title = mapPoiInfo.strText;
@@ -470,7 +469,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
 
     @Override
     public void navigationTransAction() {
-        // TODO 立即定位
         if (ConfigData.Cache.city == null) {
             Toast.makeText(getActivity(), getString(R.string.city_not_cached),
                     Toast.LENGTH_LONG).show();
@@ -616,7 +614,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
 
         public MapOverlay(Drawable defaultMarker, MapView mapView) {
             super(defaultMarker, mapView);
-            // TODO Auto-generated constructor stub
         }
     }
 
