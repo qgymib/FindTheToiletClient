@@ -1,6 +1,5 @@
 package com.qgymib.findthetoiletclient.gui;
 
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -241,79 +239,6 @@ public class SignupFragment extends Fragment {
                 SignupTask signupTask = new SignupTask();
                 signupTask.execute(username, passwd_md5);
 
-                int result = 0;
-
-                try {
-                    // 取得注册结果
-                    result = signupTask.get();
-
-                    if (result >= 0) {
-                        // 若返回值大于等于0，则注册成功
-                        // 提示登陆成功
-                        Toast.makeText(
-                                getParentFragment().getActivity()
-                                        .getApplicationContext(),
-                                getString(R.string.success_signup),
-                                Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        String warnningInfo;
-
-                        // 注册不成功，提示相应信息
-                        switch (result) {
-
-                        // 用户名已存在
-                        case ConfigData.Account.Errno.username_taken:
-                            warnningInfo = getString(R.string.error_username_taken);
-                            break;
-
-                        // 网络连接异常
-                        case ConfigData.Account.Errno.connection_error:
-                            warnningInfo = getString(R.string.error_connection);
-                            break;
-
-                        case ConfigData.Account.Errno.unknown:
-                        default:
-                            warnningInfo = getString(R.string.error_unknow);
-                            break;
-                        }
-
-                        Toast.makeText(
-                                getParentFragment().getActivity()
-                                        .getApplicationContext(), warnningInfo,
-                                Toast.LENGTH_LONG).show();
-                    }
-                } catch (InterruptedException e) {
-                    Log.e(ConfigData.Common.tag,
-                            "signup asynctask was interrupted");
-                    result = ConfigData.Account.Errno.unknown;
-                    Toast.makeText(
-                            getParentFragment().getActivity()
-                                    .getApplicationContext(),
-                            "signup asynctask was interrupted",
-                            Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    Log.e(ConfigData.Common.tag,
-                            "signup asynctask executed failed");
-                    result = ConfigData.Account.Errno.unknown;
-                    Toast.makeText(
-                            getParentFragment().getActivity()
-                                    .getApplicationContext(),
-                            "signup asynctask executed failed",
-                            Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-
-                // 若注册成功，则跳转到InfoFragment
-                if (result >= 0) {
-                    // 注册用户权限
-                    ConfigData.Account.permission = result;
-                    // 跳转至InfoFragment
-                    AccountFragment accountFragment = (AccountFragment) getParentFragment();
-                    DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
-                    dt.viewTransAction(R.layout.fragment_account_info);
-                }
             }
         });
 
@@ -418,6 +343,60 @@ public class SignupFragment extends Fragment {
             NetworkService networkService = app.getNetworkService();
 
             return networkService.requestSignup(params[0], params[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+
+            if (result >= 0) {
+                // 若返回值大于等于0，则注册成功
+                // 提示登陆成功
+                Toast.makeText(
+                        getParentFragment().getActivity()
+                                .getApplicationContext(),
+                        getString(R.string.success_signup), Toast.LENGTH_SHORT)
+                        .show();
+
+            } else {
+                String warnningInfo;
+
+                // 注册不成功，提示相应信息
+                switch (result) {
+
+                // 用户名已存在
+                case ConfigData.Account.Errno.username_taken:
+                    warnningInfo = getString(R.string.error_username_taken);
+                    break;
+
+                // 网络连接异常
+                case ConfigData.Account.Errno.connection_error:
+                    warnningInfo = getString(R.string.error_connection);
+                    break;
+
+                case ConfigData.Account.Errno.unknown:
+                default:
+                    warnningInfo = getString(R.string.error_unknow);
+                    break;
+                }
+
+                Toast.makeText(
+                        getParentFragment().getActivity()
+                                .getApplicationContext(), warnningInfo,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            // 若注册成功，则跳转到InfoFragment
+            if (result >= 0) {
+                // 注册用户名
+                ConfigData.Account.username = username;
+                // 注册用户权限
+                ConfigData.Account.permission = result;
+                // 跳转至InfoFragment
+                AccountFragment accountFragment = (AccountFragment) getParentFragment();
+                DataTransfer.ViewTransfer dt = (DataTransfer.ViewTransfer) accountFragment;
+                dt.viewTransAction(R.layout.fragment_account_info);
+            }
         }
 
     }
