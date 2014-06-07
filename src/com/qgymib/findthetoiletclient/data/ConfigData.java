@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
- * ConfigureInfo用于储存所有配置信息。
+ * ConfigData用于储存所有配置信息。
  * 
  * @author qgymib
  *
