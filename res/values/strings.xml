@@ -42,5 +42,7 @@
     <string name="lead_me_now">Lead Me Now !</string>
     <string name="city_not_cached">City information does not exits, can not locate immediately.</string>
     <string name="sign_out">Sign out</string>
+    <string name="settings_max_show_toilet_num">Maximum Number Of Toilet</string>
+    <string name="summary_max_show_toilet_num">digital only</string>
 
 </resources>

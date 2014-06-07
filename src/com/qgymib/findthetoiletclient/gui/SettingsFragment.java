@@ -1,80 +1,51 @@
 package com.qgymib.findthetoiletclient.gui;
 
-import android.app.Activity;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.data.ConfigData;
+
+import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.support.v4.preference.PreferenceFragment;
 
 /**
  * 设置界面
+ * 
  * @author qgymib
  *
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragment {
     public static final String fragmentTag = "settings";
-    
-    private View rootView = null;
 
-    public SettingsFragment() {
-    }
+    private EditTextPreference toiletNumber;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle paramBundle) {
+        super.onCreate(paramBundle);
+
+        addPreferencesFromResource(R.xml.fragment_settings);
+
+        toiletNumber = (EditTextPreference) findPreference("max_show_toilet_num");
+        toiletNumber
+                .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+                    @Override
+                    public boolean onPreferenceChange(Preference preference,
+                            Object newValue) {
+                        Matcher matcher = Pattern.compile(
+                                ConfigData.Regex.max_show_toilet_num).matcher(
+                                newValue.toString());
+                        if (matcher.find()) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        rootView = inflater.inflate(R.layout.fragment_settings, container,
-                false);
-
-        return rootView;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
 }

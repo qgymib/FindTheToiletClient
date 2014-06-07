@@ -23,6 +23,8 @@ public final class ConfigData {
         ConfigData.Account.permission = preferences.getInt("permission",
                 ConfigData.Account.Permission.developer);
         ConfigData.Cache.city = preferences.getString("cache_city", null);
+        ConfigData.Custom.max_show_toilet_num = Integer.parseInt(preferences
+                .getString("max_show_toilet_num", "5"));
     }
 
     /**
@@ -38,7 +40,12 @@ public final class ConfigData {
                 .commit();
         preferences.edit().putInt("permission", ConfigData.Account.permission)
                 .commit();
-        preferences.edit().putString("cache_city", ConfigData.Cache.city);
+        preferences.edit().putString("cache_city", ConfigData.Cache.city)
+                .commit();
+        preferences
+                .edit()
+                .putString("max_show_toilet_num",
+                        "" + ConfigData.Custom.max_show_toilet_num).commit();
     }
 
     /**
@@ -381,6 +388,10 @@ public final class ConfigData {
          * 校验原始密码。密码可由字母、数字、下划线组成，长度至少6个字符，至多16个字符。
          */
         public static final String passwd = "^[\\w\\d_]{6,16}$";
+        /**
+         * 校验洗手间最大显示数量
+         */
+        public static final String max_show_toilet_num = "^\\d+$";
     }
 
 }
