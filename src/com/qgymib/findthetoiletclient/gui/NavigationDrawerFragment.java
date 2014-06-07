@@ -299,7 +299,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_lead_me) {
-            ((NavigationTransfer)getActivity()).navigationTransAction();
+            ((NavigationTransfer) getActivity()).navigationTransAction();
             return true;
         }
 
