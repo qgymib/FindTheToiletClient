@@ -3,43 +3,28 @@ package com.qgymib.findthetoiletclient.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.qgymib.findthetoiletclient.R;
-import com.qgymib.findthetoiletclient.R.id;
-import com.qgymib.findthetoiletclient.R.layout;
-import com.qgymib.findthetoiletclient.R.menu;
-import com.qgymib.findthetoiletclient.R.string;
-import com.qgymib.findthetoiletclient.app.FTTApplication;
-import com.qgymib.findthetoiletclient.data.ConfigData;
-import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
-import com.qgymib.findthetoiletclient.data.DataTransfer.NavigationTransfer;
-import com.qgymib.findthetoiletclient.gui.NavigationDrawerFragment.NavigationDrawerCallbacks;
-import com.qgymib.findthetoiletclient.service.LocationService;
-import com.qgymib.findthetoiletclient.service.LocationService.LocationServiceBinder;
-
-import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import com.qgymib.findthetoiletclient.R;
+import com.qgymib.findthetoiletclient.app.FTTApplication;
+import com.qgymib.findthetoiletclient.data.ConfigData;
+import com.qgymib.findthetoiletclient.data.DataTransfer.LocationTransfer;
+import com.qgymib.findthetoiletclient.data.DataTransfer.NavigationTransfer;
+import com.qgymib.findthetoiletclient.service.LocationService;
+import com.qgymib.findthetoiletclient.service.LocationService.LocationServiceBinder;
 
 public class MainActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks, LocationTransfer,
