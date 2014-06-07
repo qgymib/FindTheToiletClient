@@ -296,11 +296,14 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
                     return;
                 }
 
+                // if (routeOverlay == null) {
                 routeOverlay = new RouteOverlay(getActivity(), mapView);
+                // }
+
                 // 展示其中一项方案
                 routeOverlay.setData(result.getPlan(0).getRoute(0));
-                mapView.getOverlays().add(routeOverlay);
-                mapView.refresh();
+
+                refreshOverlays();
             }
 
             @Override
@@ -524,12 +527,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
             mapOverlay.addItem(item);
         }
 
-        // 重置图层
-        mapView.getOverlays().clear();
-        mapView.getOverlays().add(locationOverlay);
-        mapView.getOverlays().add(routeOverlay);
-        mapView.getOverlays().add(mapOverlay);
-        mapView.refresh();
+        refreshOverlays();
 
         // 默认发起对最近洗手间地点的路径规划
         MKPlanNode stNode = new MKPlanNode();
@@ -613,10 +611,38 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
         Collections.sort(toiletList);
     }
 
+    /**
+     * 重置图层
+     */
+    private void refreshOverlays() {
+        // 重置图层
+        mapView.getOverlays().clear();
+        mapView.getOverlays().add(locationOverlay);
+        mapView.getOverlays().add(routeOverlay);
+        mapView.getOverlays().add(mapOverlay);
+        mapView.refresh();
+    }
+
     private class MapOverlay extends ItemizedOverlay<OverlayItem> {
 
         public MapOverlay(Drawable defaultMarker, MapView mapView) {
             super(defaultMarker, mapView);
+        }
+
+        @Override
+        protected boolean onTap(int index) {
+
+            if (index <= toiletList.size() && index >= 0) {
+                MKPlanNode stNode = new MKPlanNode();
+                stNode.pt = new GeoPoint((int) (PackagedInfo.Latitude * 1E6),
+                        (int) (PackagedInfo.Longitude * 1E6));
+                MKPlanNode edNode = new MKPlanNode();
+                edNode.pt = toiletList.get(index).getPoint();
+                mSearch.walkingSearch(PackagedInfo.City, stNode,
+                        PackagedInfo.City, edNode);
+            }
+
+            return true;
         }
     }
 
@@ -807,12 +833,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
                                 mapOverlay.addItem(item);
                             }
 
-                            // 重置图层
-                            mapView.getOverlays().clear();
-                            mapView.getOverlays().add(locationOverlay);
-                            mapView.getOverlays().add(routeOverlay);
-                            mapView.getOverlays().add(mapOverlay);
-                            mapView.refresh();
+                            refreshOverlays();
 
                             // 默认发起对最近洗手间地点的路径规划
                             MKPlanNode stNode = new MKPlanNode();
