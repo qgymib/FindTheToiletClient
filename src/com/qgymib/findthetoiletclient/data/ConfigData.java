@@ -1,6 +1,9 @@
 package com.qgymib.findthetoiletclient.data;
 
+import com.qgymib.findthetoiletclient.app.FTTApplication;
+
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * ConfigureInfo用于储存所有配置信息。
@@ -13,7 +16,9 @@ public final class ConfigData {
     /**
      * 从配置文件中取得配置信息
      */
-    public static void initPreferences(SharedPreferences preferences) {
+    public static void initPreferences() {
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(FTTApplication.getInstance());
 
         ConfigData.Account.isLogin = preferences.getBoolean("isLogin", false);
         ConfigData.Account.username = preferences.getString("username", null);
@@ -24,28 +29,31 @@ public final class ConfigData {
                 ConfigData.Account.Permission.developer);
         ConfigData.Cache.city = preferences.getString("cache_city", null);
         ConfigData.Custom.max_show_toilet_num = Integer.parseInt(preferences
-                .getString("max_show_toilet_num", "5"));
+                .getString("max_show_toilet_num", "1"));
     }
 
     /**
      * 更新配置信息
      */
-    public static void updatePreferences(SharedPreferences preferences) {
+    public static void updatePreferences() {
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(FTTApplication.getInstance());
+
         preferences.edit().putBoolean("isLogin", ConfigData.Account.isLogin)
-                .commit();
+                .apply();
         preferences.edit().putString("username", ConfigData.Account.username)
-                .commit();
+                .apply();
         preferences.edit()
-                .putString("passwd_md5", ConfigData.Account.passwd_md5)
-                .commit();
+                .putString("passwd_md5", ConfigData.Account.passwd_md5).apply();
         preferences.edit().putInt("permission", ConfigData.Account.permission)
-                .commit();
+                .apply();
         preferences.edit().putString("cache_city", ConfigData.Cache.city)
-                .commit();
+                .apply();
         preferences
                 .edit()
                 .putString("max_show_toilet_num",
-                        "" + ConfigData.Custom.max_show_toilet_num).commit();
+                        String.valueOf(ConfigData.Custom.max_show_toilet_num))
+                .apply();
     }
 
     /**
@@ -292,7 +300,7 @@ public final class ConfigData {
         /**
          * 服务器地址
          */
-        // public static final String server_address = "10.0.2.2";
+//        public static final String server_address = "192.168.43.170";
         public static final String server_address = "192.168.2.237";
         /**
          * 服务器端口

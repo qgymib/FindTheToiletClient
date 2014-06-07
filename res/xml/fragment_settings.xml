@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <EditTextPreference 
+    <EditTextPreference
+        android:defaultValue="5"
         android:dialogTitle="@string/settings_max_show_toilet_num"
-        android:title="@string/settings_max_show_toilet_num"
-        android:summary="@string/summary_max_show_toilet_num"
         android:key="max_show_toilet_num"
-        android:defaultValue="5"/>
+        android:summary="@string/summary_max_show_toilet_num"
+        android:title="@string/settings_max_show_toilet_num" />
 
 </PreferenceScreen>

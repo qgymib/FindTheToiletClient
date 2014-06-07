@@ -42,7 +42,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements
-        NavigationDrawerFragment.NavigationDrawerCallbacks, LocationTransfer, NavigationTransfer{
+        NavigationDrawerFragment.NavigationDrawerCallbacks, LocationTransfer,
+        NavigationTransfer {
 
     /**
      * 储存所有fragment列表
@@ -81,8 +82,7 @@ public class MainActivity extends ActionBarActivity implements
         Log.d(ConfigData.Common.tag, "MainActivity onCreate");
 
         // 取得配置信息
-        ConfigData
-                .initPreferences(((FTTApplication) getApplication()).preferences);
+        ConfigData.initPreferences();
 
         // 启动定位服务
         initService();
@@ -112,10 +112,6 @@ public class MainActivity extends ActionBarActivity implements
         // 结束线程池
         FTTApplication app = (FTTApplication) getApplication();
         app.shutdownNetworkSerivce();
-
-        // 更新配置信息
-        ConfigData
-                .updatePreferences(((FTTApplication) getApplication()).preferences);
     }
 
     @Override
@@ -275,7 +271,16 @@ public class MainActivity extends ActionBarActivity implements
             // 向BaiduMapFragment分发信息
             ((NavigationTransfer) fragmentManager
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
-                    .navigationTransAction();;
+                    .navigationTransAction();
+            ;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        
+        // 更新配置信息
+        ConfigData.updatePreferences();
     }
 }

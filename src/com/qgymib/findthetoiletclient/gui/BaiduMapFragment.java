@@ -481,7 +481,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
 
         // 取得本地信息
         String result = networkService.requrestSearch(
-                Tools.getCRC32(PackagedInfo.City), false);
+                Tools.getCRC32(ConfigData.Cache.city), false);
 
         String[] locationList = result.split("_");
         if (!toiletList.isEmpty()) {

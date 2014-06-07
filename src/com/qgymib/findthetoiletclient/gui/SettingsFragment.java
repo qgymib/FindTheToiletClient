@@ -40,6 +40,8 @@ public class SettingsFragment extends PreferenceFragment {
                                 ConfigData.Regex.max_show_toilet_num).matcher(
                                 newValue.toString());
                         if (matcher.find()) {
+                            ConfigData.Custom.max_show_toilet_num = Integer
+                                    .parseInt(newValue.toString());
                             return true;
                         } else {
                             return false;
