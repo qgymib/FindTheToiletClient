@@ -81,10 +81,6 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
      */
     private LocationData locationData = null;
     /**
-     * 定位图层
-     */
-    private MyLocationOverlay locationOverlay = null;
-    /**
      * 跟踪按键
      */
     private ImageView locateImageView = null;
@@ -116,6 +112,10 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
      * 洗手间列表，需要进行排序
      */
     private List<LocationSet> toiletList = new ArrayList<LocationSet>();
+    /**
+     * 定位图层
+     */
+    private MyLocationOverlay locationOverlay = null;
     /**
      * 洗手间位置覆盖物
      */
@@ -480,8 +480,8 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
         NetworkService networkService = app.getNetworkService();
 
         // 取得本地信息
-        String result = networkService.requrestSearch(ConfigData.Cache.city,
-                false);
+        String result = networkService.requrestSearch(
+                Tools.getCRC32(PackagedInfo.City), false);
 
         String[] locationList = result.split("_");
         if (!toiletList.isEmpty()) {
@@ -524,7 +524,10 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
             mapOverlay.addItem(item);
         }
 
-        // 显示洗手间位置
+        // 重置图层
+        mapView.getOverlays().clear();
+        mapView.getOverlays().add(locationOverlay);
+        mapView.getOverlays().add(routeOverlay);
         mapView.getOverlays().add(mapOverlay);
         mapView.refresh();
 
@@ -709,7 +712,7 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
 
         @Override
         public int compareTo(LocationSet another) {
-            return 0 - getDistance().compareTo(another.getDistance());
+            return getDistance().compareTo(another.getDistance());
         }
 
     }
@@ -804,7 +807,10 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
                                 mapOverlay.addItem(item);
                             }
 
-                            // 显示洗手间位置
+                            // 重置图层
+                            mapView.getOverlays().clear();
+                            mapView.getOverlays().add(locationOverlay);
+                            mapView.getOverlays().add(routeOverlay);
                             mapView.getOverlays().add(mapOverlay);
                             mapView.refresh();
 
