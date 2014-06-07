@@ -48,23 +48,24 @@ public class InfoFragment extends Fragment {
                 .findViewById(R.id.textView_info_username);
         permissionTextView = (TextView) containView
                 .findViewById(R.id.textView_info_permission);
-        
+
         usernameTextView.setText(ConfigData.Account.username);
-        permissionTextView.setText(ConfigData.Account.permission);
+        String[] permission = { "normal", "admin", "developer" };
+        permissionTextView.setText(permission[ConfigData.Account.permission]);
 
         signoutButton = (Button) containView.findViewById(R.id.button_signout);
         signoutButton.getBackground().setColorFilter(Color.RED,
                 PorterDuff.Mode.MULTIPLY);
-        
+
         signoutButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 ConfigData.Account.username = null;
                 ConfigData.Account.permission = ConfigData.Account.Permission.normal;
-                
-                AccountFragment fragment = (AccountFragment)getParentFragment();
-                ViewTransfer vt = (ViewTransfer)fragment;
+
+                AccountFragment fragment = (AccountFragment) getParentFragment();
+                ViewTransfer vt = (ViewTransfer) fragment;
                 vt.viewTransAction(R.layout.fragment_account_login);
             }
         });
