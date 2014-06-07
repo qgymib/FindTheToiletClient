@@ -250,6 +250,7 @@ public class MainActivity extends ActionBarActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            onNavigationDrawerItemSelected(2);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -272,14 +273,13 @@ public class MainActivity extends ActionBarActivity implements
             ((NavigationTransfer) fragmentManager
                     .findFragmentByTag(BaiduMapFragment.fragmentTag))
                     .navigationTransAction();
-            ;
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+
         // 更新配置信息
         ConfigData.updatePreferences();
     }
