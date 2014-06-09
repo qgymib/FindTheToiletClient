@@ -30,6 +30,15 @@ public final class ConfigData {
         ConfigData.Cache.city = preferences.getString("cache_city", null);
         ConfigData.Custom.max_show_toilet_num = Integer.parseInt(preferences
                 .getString("max_show_toilet_num", "1"));
+        ConfigData.Custom.isStoreZoomLevel = preferences.getBoolean(
+                "store_zoom_level", false);
+        if (ConfigData.Custom.isStoreZoomLevel) {
+            ConfigData.Map.zoom_level = preferences.getFloat("zoom_level", 17);
+        }
+        ConfigData.Net.server_address = preferences.getString("server_address",
+                "192.168.2.237");
+        ConfigData.Net.server_port = Integer.parseInt(preferences.getString(
+                "server_port", "9876"));
     }
 
     /**
@@ -54,6 +63,23 @@ public final class ConfigData {
                 .putString("max_show_toilet_num",
                         String.valueOf(ConfigData.Custom.max_show_toilet_num))
                 .apply();
+        preferences
+                .edit()
+                .putBoolean("store_zoom_level",
+                        ConfigData.Custom.isStoreZoomLevel).apply();
+        if (ConfigData.Custom.isStoreZoomLevel) {
+            preferences.edit()
+                    .putFloat("zoom_level", ConfigData.Map.zoom_level);
+        }
+        preferences.edit()
+                .putString("server_address", ConfigData.Net.server_address)
+                .apply();
+        ;
+        preferences
+                .edit()
+                .putString("server_port",
+                        String.valueOf(ConfigData.Net.server_port)).apply();
+        ;
     }
 
     /**
@@ -67,6 +93,10 @@ public final class ConfigData {
          * 地图中洗手间最多显示个数
          */
         public static int max_show_toilet_num = 5;
+        /**
+         * 是否储存放大级别
+         */
+        public static boolean isStoreZoomLevel = false;
     }
 
     /**
@@ -83,7 +113,7 @@ public final class ConfigData {
         /**
          * 后台通信线程池的大小。
          */
-        public static final int thread_pool_size = 1;
+        public static int thread_pool_size = 2;
         /**
          * 单一任务执行时间上限，单位 毫秒
          */
@@ -286,7 +316,7 @@ public final class ConfigData {
         /**
          * 默认放大级别
          */
-        public static final int zoom_level = 17;
+        public static float zoom_level = 17;
     }
 
     /**
@@ -299,12 +329,12 @@ public final class ConfigData {
         /**
          * 服务器地址
          */
-//        public static final String server_address = "192.168.43.170";
-        public static final String server_address = "192.168.2.237";
+        // public static final String server_address = "192.168.43.170";
+        public static String server_address = "192.168.2.237";
         /**
          * 服务器端口
          */
-        public static final int server_port = 9876;
+        public static int server_port = 9876;
         /**
          * 连接超时时间，单位 毫秒
          */
@@ -396,9 +426,13 @@ public final class ConfigData {
          */
         public static final String passwd = "^[\\w\\d_]{6,16}$";
         /**
-         * 校验洗手间最大显示数量
+         * 校验数字
          */
-        public static final String max_show_toilet_num = "^\\d+$";
+        public static final String num = "^\\d+$";
+        /**
+         * 校验IP
+         */
+        public static final String ip = "^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$";
     }
 
 }

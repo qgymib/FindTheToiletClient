@@ -44,5 +44,9 @@
     <string name="sign_out">Sign out</string>
     <string name="settings_max_show_toilet_num">Maximum Number Of Toilet</string>
     <string name="summary_max_show_toilet_num">digital only</string>
+    <string name="settings_store_zoom_level">Store zoom level</string>
+    <string name="settings_size_of_threadpool">Size of Thread Pool</string>
+    <string name="settings_server_address">Server Address</string>
+    <string name="settings_server_port">Server Port</string>
 
 </resources>

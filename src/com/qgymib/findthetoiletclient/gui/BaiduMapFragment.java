@@ -270,6 +270,8 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
                 PackagedInfo.Rotate = mapStatus.rotate;
                 PackagedInfo.Center = mapStatus.targetGeo;
 
+                ConfigData.Map.zoom_level = PackagedInfo.Zoom;
+                
                 // 显示调试信息
                 showDebugInfo();
             }
@@ -592,6 +594,8 @@ public class BaiduMapFragment extends Fragment implements LocationTransfer,
             }
 
             infoView.setText(buffer.toString());
+        }else{
+            infoView.setText("");
         }
 
     }

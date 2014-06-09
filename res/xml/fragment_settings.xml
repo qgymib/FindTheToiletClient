@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <EditTextPreference
-        android:defaultValue="5"
-        android:dialogTitle="@string/settings_max_show_toilet_num"
-        android:key="max_show_toilet_num"
-        android:summary="@string/summary_max_show_toilet_num"
-        android:title="@string/settings_max_show_toilet_num" />
+    <PreferenceCategory android:title="Custom" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="store_zoom_level"
+            android:summary="@string/settings_store_zoom_level"
+            android:title="@string/settings_store_zoom_level" />
+
+        <EditTextPreference
+            android:defaultValue="5"
+            android:dialogTitle="@string/settings_max_show_toilet_num"
+            android:key="max_show_toilet_num"
+            android:summary="@string/summary_max_show_toilet_num"
+            android:title="@string/settings_max_show_toilet_num" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Developer" >
+        <EditTextPreference
+            android:defaultValue="2"
+            android:dialogTitle="@string/settings_size_of_threadpool"
+            android:key="thread_pool_size"
+            android:summary="@string/settings_size_of_threadpool"
+            android:title="@string/settings_size_of_threadpool" />
+        <EditTextPreference
+            android:defaultValue="192.168.2.237"
+            android:dialogTitle="@string/settings_server_address"
+            android:key="server_address"
+            android:summary="@string/settings_server_address"
+            android:title="@string/settings_server_address" />
+        <EditTextPreference
+            android:defaultValue="9876"
+            android:dialogTitle="@string/settings_server_port"
+            android:key="server_port"
+            android:summary="@string/settings_server_port"
+            android:title="@string/settings_server_port" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
